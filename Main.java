@@ -13,7 +13,7 @@ public class Main {
    //i.disData(); // display database product
    //i.disProduct(); // display product catalog
 
-  i.disP_details(scanner); //display product detail
+  i. displayProductDetails(scanner); //display product detail
 
   
   }

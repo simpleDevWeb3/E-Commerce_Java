@@ -61,7 +61,7 @@ public void setBrand(String brand) {
     this.material = material;
   }
 
-  @Override
+  @Override  // it overide the method display Product it prompt different prouct details
   public void displayProduct() {
     System.out.println("--------------------------------------------------");
     System.out.println("Product ID   : " + getId());  
@@ -74,8 +74,8 @@ public void setBrand(String brand) {
     for (int i = 0; i < color.length; i++) {
         System.out.print("- " + color[i] + ": "); // print row (color)
 
-        for (int j = 0; j < size[i].length; j++) {
-            System.out.print(size[i][j] + " (" + stock[i][j] + ")  ");//print column[row][column](size)
+        for (int j = 0; j < size[i].length; j++) {                                       //3               
+            System.out.print(size[i][j] + " (" + stock[i][j] + ")  ");//print column[length of size][stock](size)
         }
 
         System.out.println();
