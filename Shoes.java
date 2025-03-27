@@ -67,15 +67,16 @@ public void setBrand(String brand) {
     System.out.println("Product ID   : " + getId());  
     System.out.println("Product Name : " + getName());
     System.out.println("Brand        : " + brand);
+    System.out.println("Category     : " + getCategory().getName());
     System.out.println("Material     : " + material);
     System.out.println("Price        : RM" + getPrice());
-    System.out.println("Available Colors & Sizes:");
+    System.out.println("\nAvailable Colors & Sizes:");
 
     for (int i = 0; i < color.length; i++) {
-        System.out.print("- " + color[i] + ": "); // print row (color)
+        System.out.printf("%-5s: ", color[i]); // print row (color)
 
-        for (int j = 0; j < size[i].length; j++) {                                       //3               
-            System.out.print(size[i][j] + " (" + stock[i][j] + ")  ");//print column[length of size][stock](size)
+        for (int j = 0; j < size[i].length; j++) {                                                   
+            System.out.printf("%s(%d)\t",size[i][j] ,stock[i][j]);//print column[length of size][stock]
         }
 
         System.out.println();

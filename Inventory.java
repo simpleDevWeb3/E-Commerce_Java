@@ -36,14 +36,16 @@ public class Inventory {
             ),
             new Shoes(
                 "Nike Air Zoom", 400.00, menSportShoes, "Nike",
-                new String[]{"Blue", "Red"},
+                new String[]{"Blue", "Red","Pink"},
                 new String[][]{
                     {"US 8", "US 9", "US 10"}, // Blue sizes
-                    {"US 7", "US 8"}           // Red sizes
+                    {"US 7", "US 8"},        // Red sizes
+                    {"US 7", "US 8"}         // Pink sizes    
                 },
                 new int[][]{
                     {4, 6, 8}, // Stock for Blue
-                    {5, 9}     // Stock for Red
+                    {5, 9},     // Stock for Red
+                    {15, 9},     // Stock for Pink
                 },
                 "Synthetic Leather"
             ),
