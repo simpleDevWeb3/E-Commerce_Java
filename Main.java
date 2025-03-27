@@ -3,10 +3,10 @@ public class Main {
   public static void main(String []args){
     Scanner scanner = new Scanner(System.in);
    Inventory i = new Inventory();
+   Crud c = new Crud();
    
-   //i.displayCat();/*<=display all category exist in inventory */
-   
-   //i.displaySubCat();/* <= display all subcategory exist in inventory*/
+   //i.displayCategories();/*<=display all category exist in inventory */
+
 
    //i.displayProducts(); /*<= display all product exist in inventory*/
   
@@ -14,7 +14,9 @@ public class Main {
    //i.disProductList();; // display product catalog
 
   //i. displayProductDetails(scanner); //display product detail
+ 
 
+  c.displayMenu();
 
  
   

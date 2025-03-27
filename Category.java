@@ -15,6 +15,11 @@ public class Category {
       this.cName  = cName;
       this.pCategory = pCategory;
       sCategories = new Category[0];
+
+    //it will add subcategory to the array sCategories
+      if (pCategory != null) {
+        pCategory.addSubcategory(this);
+    }
   }
 
   public String getId(){ return id;}
@@ -30,25 +35,7 @@ public class Category {
      sCategories[sCategories.length - 1] = subcategory;
   }
 
-  public void display() {
-    System.out.println("\n===================================");
-    System.out.println("  CATEGORY DETAILS");
-    System.out.println("===================================");
-    System.out.printf(" ID         : %s%n", id);
-    System.out.printf(" Name       : %s%n", cName);
 
-
-    if (sCategories.length > 0) {
-        System.out.println("\n Subcategories:");
-        for (Category sub : sCategories) {
-            System.out.printf("   - %s (%s)%n", sub.getName(), sub.getId());
-        }
-    } else {
-        System.out.println(" No Subcategories");
-    }
-
-    System.out.println("===================================\n");
-}
 
  
 }

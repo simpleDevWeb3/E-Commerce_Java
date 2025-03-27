@@ -1,5 +1,7 @@
 import java.util.Scanner;
+import java.lang.runtime.SwitchBootstraps;
 import java.util.Arrays;
+import java.util.InputMismatchException;
 
 public class Inventory {
     Category[] categories;
@@ -11,14 +13,13 @@ public class Inventory {
 
     //------------------Sub Categories-------------------------------//
     Category menSportShoes = new Category("Men Sport Shoes", menWear);
+    Category menSandal = new Category("Men Sandal", menWear);
     Category womenSportShoes = new Category("Women Sport Shoes", womenWear);
 
     public Inventory() {
         categories = new Category[]{
             menWear,
-            womenWear,
-            menSportShoes,
-            womenSportShoes
+            womenWear        
         };
 
         products = new Product[]{
@@ -70,28 +71,20 @@ public class Inventory {
         System.out.println("\n===================================");
         System.out.println("  CATEGORY DETAILS");
         System.out.println("===================================");
+    
+        int i = 1;
         for (Category category : categories) {
+           
             if (category.getPCategory() == null) {
-                System.out.println("\n");
-                System.out.printf(" ID         : %s%n", category.getId());
-                System.out.printf(" Name       : %s%n", category.getName());
+            
+                System.out.printf("%-5d %s%n",i, category.getName());
+                i++;
             }
+              
         }
+        System.out.println("===================================");
     }
 
-    public void displaySubCategories() {
-        System.out.println("\n===================================");
-        System.out.println("  SubCategory details");
-        System.out.println("===================================");
-        for (Category category : categories) {
-            if (category.getPCategory() != null) {
-                System.out.println("\n");
-                System.out.printf(" Parent     :%s%n", category.getPCategory().getName());
-                System.out.printf(" ID         : %s%n", category.getId());
-                System.out.printf(" Name       : %s%n", category.getName());
-            }
-        }
-    }
 
     public void displayProducts() {
         System.out.println("\n===================================");
@@ -128,7 +121,7 @@ public class Inventory {
 
     public void displayProductDetails(Scanner scanner) {
         disProductList();
-
+     try{
         System.out.print("Choose an index (1 - " + products.length + "): ");
         int index = scanner.nextInt();
 
@@ -146,6 +139,12 @@ public class Inventory {
         else {
             System.out.println("Invalid index! Please choose a valid product index.");
         }
+     }catch(InputMismatchException e){
+        System.out.println(" Invalid input! Please enter a number.");
+        scanner.next(); // Clear invalid input
+        displayProductDetails(scanner);
+     }
+       
     }
 
 
@@ -157,5 +156,69 @@ public class Inventory {
      products[products.length - 1] = newProduct;
     }
 
+    public Product[]getSubCatProduct(int choice, Scanner scanner) {
+        // Retrieve subcategories
+        Category[] subcats = categories[choice].getSCategories(); // Returns array
+    
+        // Check if subcategories exist
+        if (subcats == null || subcats.length == 0) {
+            System.out.println("No subcategories available.");
+            
+        }
+
+        Category subCat = chooseSubCat(choice, scanner, subcats); 
+        int count = 0;
+        for(Product product : products)
+        
+        if(product.getCategory().equals(subCat)){ 
+          count++;
+        }
+    
+       
+ 
+        Product []subCatProduct = new Product[count]; 
+        int i = 0; 
+        for(Product product : products)
+        
+        if(product.getCategory().equals(subCat)){
+          subCatProduct[i] = product;
+          i++;
+        }
+
+        return subCatProduct;
+
+        
+    }
+    
+    public Category chooseSubCat(int choice, Scanner scanner, Category[] subcats) {
+        try {
+            // Display subcategories
+            System.out.println("\nSubcategories for " + categories[choice].getName() + ":");
+            System.out.println("===================================");
+            for (int i = 0; i < subcats.length; i++) {
+                System.out.printf("%-5d%s\n", (i + 1), subcats[i].getName());
+            }
+            System.out.println("===================================");
+    
+            // Get user input
+            System.out.printf("Choice (1-%d): ", subcats.length);
+            int subChoice = scanner.nextInt();
+            scanner.nextLine(); // Clear newline buffer
+    
+            // Validate choice
+            if (subChoice >= 1 && subChoice <= subcats.length) {
+                System.out.println("You chose: " + subcats[subChoice - 1].getName());
+                Category subCat = subcats[subChoice - 1];
+                return subCat; // Return valid choice
+            } else {
+                System.out.println("Invalid choice! Please enter a number between 1 and " + subcats.length);
+                return chooseSubCat(choice, scanner, subcats); // Recursively ask again
+            }
+        } catch (InputMismatchException e) {
+            System.out.println(" Must be a number!");
+            scanner.next(); // Clear invalid input
+            return chooseSubCat(choice, scanner, subcats); // Recursively ask again
+        }
+    }
     
 }
