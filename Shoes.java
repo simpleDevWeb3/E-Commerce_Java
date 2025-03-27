@@ -6,7 +6,7 @@ public class Shoes extends Product {
   private int[][] stock;
   private String[]color;
   private String material;
-
+ 
   
 
   public Shoes(String name, double price, Category category, String brand, String[] color, String[][] size, int[][] stock, String material) {
@@ -23,6 +23,15 @@ public class Shoes extends Product {
     return brand;
   }
 
+  public int getTotalStock() {
+    int totalStock = 0;
+    for (int i = 0; i < stock.length; i++) {
+        for (int j = 0; j < stock[i].length; j++) {
+            totalStock += stock[i][j]; 
+        }
+    }
+    return totalStock;
+}
 
   public int[][]getStock(){
     return stock;
