@@ -8,13 +8,15 @@ public class Main {
    
    //i.displaySubCat();/* <= display all subcategory exist in inventory*/
 
-   //i.displayProduct(); /*<= display all product exist in inventory*/
+   //i.displayProducts(); /*<= display all product exist in inventory*/
   
    //i.disData(); // display database product
-   //i.disProduct(); // display product catalog
+   //i.disProductList();; // display product catalog
 
-  i. displayProductDetails(scanner); //display product detail
+  //i. displayProductDetails(scanner); //display product detail
 
+
+ 
   
   }
 }
