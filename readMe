@@ -1,0 +1,26 @@
+Class Inventory_
+             |_filter() <---- Main method
+     __ _______|      |_displayAllProduct()  <-----display All 
+    |                 |
+    |                 -disProductData() <----- display All productList
+    |                    >getName()
+    |                    >getPrice()
+    |                    >getQuantity() Product class
+    |                    >getTotalStock() Shoes class
+    |                      |
+    |                      -displayProductDetails(selectedProduct); <-----display the product detail
+    |                        >getId()
+    |                        >getName()
+    |                        >getPrice()
+    |                        >getBrand()
+    |                        >getColor()
+    |                        >getStock()
+    |
+    |_displayProductByCat()
+      |_displayCategories()
+        >getSubCatProduct(choice-1, scanner);
+         |
+         |_disProductData(subCatProduct);<-----display productlist from subCat
+          >chooseProduct(subCatProduct , scanner); 
+           |
+           |_ displayProductDetails(selectedProduct);
