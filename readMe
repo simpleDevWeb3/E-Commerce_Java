@@ -1,3 +1,6 @@
+Filter method -> display product with 2 selection diplay by all or display by Category
+              -> function to display product details of the product wther is filteer from all or category
+
 Class Inventory_
              |_filter() <---- Main method
      __ _______|      |_displayAllProduct()  <-----display All 
@@ -19,8 +22,10 @@ Class Inventory_
     |_displayProductByCat()
       |_displayCategories()
         >getSubCatProduct(choice-1, scanner);
-         |
-         |_disProductData(subCatProduct);<-----display productlist from subCat
-          >chooseProduct(subCatProduct , scanner); 
+         |_chooseSubCat(int choice, Scanner scanner, Category[] subcats)
+           |_displaySubCat(selectedSubCat)
            |
-           |_ displayProductDetails(selectedProduct);
+           |_disProductData(subCatProduct);<-----display productlist from subCat
+             >chooseProduct(subCatProduct , scanner); 
+             |
+             |_ displayProductDetails(selectedProduct);

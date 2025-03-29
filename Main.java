@@ -5,8 +5,7 @@ public class Main {
    Inventory i = new Inventory();
    Crud c = new Crud();
    
-   //i.displayCategories();/*<=display all category exist in inventory */
-
+   //i.displayCategories();/*<=display main category exist in inventory */
 
    //i.displayProducts(); /*<= display all product exist in inventory*/
   
