@@ -316,12 +316,32 @@ int numOfColor = 0;
 
 
   for (int i = 0; i < numOfColor; i++) {
+      Shoes.displaySize();
       System.out.printf("\n%d.) %s colors\n", (i + 1), colors[i]);
       System.out.println("========================================");
 
       for (int j = 0; j < numOfSizes[i]; j++) { 
-          System.out.printf("Enter size %d for color %s: ", (j + 1), colors[i]);
-          eachSize[i][j] = scanner.nextDouble();   
+      
+          do {
+             try {
+
+              System.out.printf("%d.) size  for color %s: ", (j + 1), colors[i]);
+              int choice = scanner.nextInt()-1;
+              isValid = (choice>= 0 && choice < Shoes.AVAILABLE_SIZES_CM.length) ? true : false;
+              eachSize[i][j] = isValid ? Shoes.AVAILABLE_SIZES_CM[choice] : 0; 
+              String feedback = isValid ? "Added succesfuly!" : "Choose 1 beetween " + Shoes.AVAILABLE_SIZES_CM.length;
+              System.out.println(feedback);
+            } catch (InputMismatchException e) {
+
+              System.out.println(" Invalid input! Please enter a number.");
+              scanner.nextLine();
+              isValid = false;
+
+            }
+  
+          } while (isValid == false);     
+            
+               
          
       }
   }
@@ -329,7 +349,7 @@ int numOfColor = 0;
   int[][]stock  = new int[numOfColor][];
 
   for(int i = 0; i < numOfColor ; i++){
-
+      
       stock[i]= new int[numOfSizes[i]];
       
     for(int j = 0; j < numOfSizes[i]; j++ ){

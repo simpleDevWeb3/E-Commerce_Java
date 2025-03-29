@@ -120,7 +120,7 @@ public static void displaySize(){
 
   int index = 1;
   for (double size : AVAILABLE_SIZES_CM) {
-      System.out.printf(" %d. %-10s %n", index++, size);
+      System.out.printf(" %d. %scm %n", index++, size);
   }
 
   System.out.println("___________________");
