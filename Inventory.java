@@ -3,8 +3,11 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Inventory {
-    Category[] categories;
-    Product[] products;
+    private Category[] categories;
+    private Product[] products;
+   
+
+   
 
 //#region  Data
     Category menWear = new Category("Men Wear", null);
@@ -26,9 +29,9 @@ public class Inventory {
             new Shoes(
                 "Adidas Running Max", 350.00, menSportShoes, "Adidas",
                 new String[]{"Black", "White"},
-                new String[][]{
-                    {"US 7", "US 8", "US 9"}, // Black sizes
-                    {"US 6", "US 7"}          // White sizes
+                new double[][]{
+                    {7, 8, 9}, // Black sizes
+                    {6, 7}     // White sizes
                 },
                 new int[][]{
                     {5, 3, 7}, // Stock for Black
@@ -39,24 +42,24 @@ public class Inventory {
             new Shoes(
                 "Nike Air Zoom", 400.00, menSportShoes, "Nike",
                 new String[]{"Blue", "Red","Pink"},
-                new String[][]{
-                    {"US 8", "US 9", "US 10"}, // Blue sizes
-                    {"US 7", "US 8"},        // Red sizes
-                    {"US 7", "US 8"}         // Pink sizes    
+                new double[][]{
+                    {8, 9, 10}, // Blue sizes
+                    {7, 8},     // Red sizes
+                    {7, 8}      // Pink sizes    
                 },
                 new int[][]{
                     {4, 6, 8}, // Stock for Blue
-                    {5, 9},     // Stock for Red
-                    {15, 9},     // Stock for Pink
+                    {5, 9},    // Stock for Red
+                    {15, 9}    // Stock for Pink
                 },
                 "Synthetic Leather"
             ),
             new Shoes(
                 "Puma Sports", 280.00, womenSportShoes, "Puma",
                 new String[]{"Pink", "Grey"},
-                new String[][]{
-                    {"US 6", "US 7", "US 8"}, // Pink sizes
-                    {"US 5", "US 6"}          // Grey sizes
+                new double[][]{
+                    {6, 7, 8}, // Pink sizes
+                    {5, 6}     // Grey sizes
                 },
                 new int[][]{
                     {8, 6, 3}, // Stock for Pink
@@ -65,7 +68,7 @@ public class Inventory {
                 "Knit Fabric"
             )
         };
-    }
+    }        
 //#endregion Constructor
 
 //#region  displayCategories
@@ -446,5 +449,17 @@ public Product chooseProduct(Product[] products, Scanner scanner){
   
   }
 //#endregion
+
+
+ public Category[] getCategories() {
+     return categories;
+ }
+
+ public Product[] getProducts() {
+        return products;
+ }
+
+    
+    
 }
 

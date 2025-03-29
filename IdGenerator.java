@@ -3,7 +3,9 @@ public class IdGenerator{
   private static int catCount = 1;
 
   public static String generateProductId(String prefix) {
-    return "Prod_" + prefix.replace(" ", "") + (prodCount++);
+   String id = "Prod_" + prefix.replace(" ", "") + (prodCount);
+   prodCount++;
+    return  id;
 }
 
 public static String generateCategoryId(String prefix) {

@@ -57,12 +57,12 @@ public class Crud{
           } 
       }while(true);
     
-    }catch(InputMismatchException e){ 
+    }catch(Exception e){ 
       System.out.println(" Invalid input! Please enter a number.");
-      scanner.next();
+      scanner.nextLine();
       displayMenu();
-     }
-    
+    }
+  
 }
 //#endregion
 //#region editProduct
@@ -94,7 +94,7 @@ public void addProduct(){
  
   String name;
   String brand;
-  String material;
+  String material = "";
   double price = 0;
   Category[] subcats = null;
   Category subcat = null;
@@ -106,15 +106,37 @@ public void addProduct(){
   System.out.print("  Enter the brand    :  ");
   brand = scanner.nextLine();
 
-  System.out.print("  Enter the material : ");
-  material = scanner.nextLine();
+do { 
+  
+   try {
+    Shoes.displayMaterials();
+    System.out.print("Select Materials: ");
+    int choice = scanner.nextInt()-1;
+    isValid = (choice >= 0 && choice < Shoes.AVAILABLE_MATERIALS.length) ? true : false;
+    material = isValid ?  Shoes.AVAILABLE_MATERIALS[choice] : null;
+    String feedback = isValid ? "  Material:  " + Shoes.AVAILABLE_MATERIALS[choice] : "Choose between 1-" + Shoes.AVAILABLE_MATERIALS.length;
+    System.out.println(feedback);
+
+   } catch (Exception e) {
+
+    System.out.print("  Invalid input! Please enter a number.\n");
+    scanner.nextLine(); 
+    isValid = false;
+   }
+
+} while(isValid == false);
+ 
   
   do{
     isValid = true;
     try { 
       System.out.print("  Enter product price: RM");
-       price = scanner.nextDouble();
-      scanner.nextLine();   
+       double p = scanner.nextDouble();
+      scanner.nextLine();  
+      isValid = (p>0 && p<1000)? true:false;
+      price = isValid ? p : 0; 
+      String feedback = isValid ? "":"price must be more than 0 and less than 1000\n";
+      System.out.println(feedback);
 
     } catch (InputMismatchException e) {
 
@@ -135,7 +157,7 @@ public void addProduct(){
         inventory.displayCategories();
         System.out.print("Choose category: ");
         int choice = scanner.nextInt();
-        if(choice >= 1 && choice <= inventory.categories.length){
+        if(choice >= 1 && choice <= inventory.getCategories().length){
 
           subcats = inventory.getSubCatList(choice-1);// get main category's subcatList    
 
@@ -145,7 +167,7 @@ public void addProduct(){
 
         }else {
 
-          System.out.println("Invalid choice! Please enter a number between 1 and " + inventory.categories.length);
+          System.out.println("Invalid choice! Please enter a number between 1 and " + inventory.getCategories().length);
 
           isValid =false;
         }
@@ -183,7 +205,7 @@ int numOfColor = 0;
   do { 
       //Todo: validate input must be number
     try {
-
+    
       System.out.print("Enter number of color: ");
       numOfColor =  scanner.nextInt();
       scanner.nextLine();
@@ -214,61 +236,92 @@ int numOfColor = 0;
       //Todo: validate color input must be character only
       //Todo : validate it is repeat color?
       do { 
-        System.out.printf("%d.)%s _>",(i+1),"Color");
-        colors[i]  = scanner.nextLine();
-
-        isValid = isValidString(colors[i]);
-
-        isDuplicate =  isDuplicate(colors[i], colors, i);
-
-        
-      
-        
-       
-
-            if (!isValid) {
-              System.out.println("\nInput invalid! It must contain only letters.");
-          } else if (isDuplicate) {
-              System.out.println("\nColor cannot be the same!");
-              isValid = false;
-          } else {
-              count--; // Reduce count only for valid & unique inputs
-              System.out.println("You added " + colors[i] + " color successfully! " + count + " color(s) left.");
+        try {
+          Shoes.displayColor();
+          System.out.printf("%d.)%s _>",(i+1),"Color");
+          int choice = scanner.nextInt() - 1;
+          scanner.nextLine();
+  
+          isValid = (choice >= 0 && choice < Shoes.AVAILABLE_COLORS.length) ? true : false;
+  
+          
+          if (!isValid) {
+              System.out.println("\nChoose a valid option (1-" + (Shoes.AVAILABLE_COLORS.length - 1) + ").");
+          } 
+          else {
+              colors[i] = Shoes.AVAILABLE_COLORS[choice];
+              isDuplicate = isDuplicate(colors[i], colors, i); // Check first before adding
+              
+              if (isDuplicate) {
+                  System.out.println("\nColor cannot be the same! Try again.");
+                  isValid = false;
+              } else {
+                  colors[i] = Shoes.AVAILABLE_COLORS[choice]; // Assign only if unique
+                  count--; // Reduce count only for valid & unique inputs
+                  System.out.println("You added " + colors[i] + " color successfully! " + count + " color(s) left.");
+              }
           }
+            
+        } catch (Exception e) {
+          System.out.println("\nInvalid input! Please enter a number.");
+          scanner.nextLine();
+          isValid = false;
+        }
+       
         
-
       } while (isValid == false);
     }
   
       
+  //#endregion 
  
-  
+ //#region add number of size avalale for each color
 
+ //todo: check shoes size;
+//todo: check each shoes size must be mumber
 
-  String[][] eachSize = new String[numOfColor][];
+  double[][] eachSize = new double[numOfColor][];
   int[] numOfSizes = new int[numOfColor];
 
 
   for(int i = 0; i < numOfColor ; i++){
-    System.out.printf("Enter number of sizes available for  %s color_>",colors[i]);
-    numOfSizes[i] = scanner.nextInt();
+    do { 
+       //todo: validate it is number ;
+      try {
+         //todo: validate it the number > 0 ;
+        
+        System.out.printf("Enter number of sizes available for  %s color_>",colors[i]);
+        numOfSizes[i] = scanner.nextInt();
+        numOfSizes[i] = (numOfSizes[i] > 0) ?  numOfSizes[i] : 0;
+        isValid =  (numOfSizes[i] <= 0) ? false : true;
+        String err = isValid ? "":"Number must be more than 0";
+        System.out.println(err);
+
+      } catch (InputMismatchException e) {
+
+        System.out.println(" Invalid input! Please enter a number.");
+        scanner.nextLine();
+        isValid = false;
+      }
+      
+  
+    } while (!isValid);
+   
     scanner.nextLine(); 
-    eachSize[i] = new String[numOfSizes[i]];
+    eachSize[i] = new double[numOfSizes[i]];
+    
+  
   }
  
- //#endregion 
- 
- //#region add number of size avalale for each color
- //todo: validate it the number > 0 ;
- //todo: validate it is number ;
- //todo: check shoes size;
+
+
   for (int i = 0; i < numOfColor; i++) {
       System.out.printf("\n%d.) %s colors\n", (i + 1), colors[i]);
       System.out.println("========================================");
 
       for (int j = 0; j < numOfSizes[i]; j++) { 
           System.out.printf("Enter size %d for color %s: ", (j + 1), colors[i]);
-          eachSize[i][j] = scanner.nextLine();
+          eachSize[i][j] = scanner.nextDouble();   
          
       }
   }
@@ -297,8 +350,29 @@ int numOfColor = 0;
   }
   System.out.println("=====================================");
 
- Shoes shoe = new Shoes(name,price,subcat,brand,colors, eachSize,stock,material);
- inventory.addProduct(shoe);
+Shoes shoe = new Shoes(name,price,subcat,brand,colors, eachSize,stock,material);
+
+System.out.println("\n=====================================");
+System.out.println("          Product Summary           ");
+System.out.println("=====================================");
+shoe.displayProduct();  // Show the final product details
+
+
+// Ask for confirmation before adding the product
+char choice;
+  do {
+      System.out.print("Do you confirm adding this product? (y/n): ");
+      choice = scanner.next().toLowerCase().charAt(0);
+
+      if (choice == 'y') {
+          inventory.addProduct(shoe);
+          System.out.println(" Product added successfully!");
+      } else if (choice == 'n') {
+          System.out.println(" Product addition canceled.");
+      } else {
+          System.out.println("Invalid choice! Please enter 'y' or 'n'.");
+      }
+  } while (choice != 'y' && choice != 'n');  
 }
 //#endregion
 //#region addCategory
@@ -328,4 +402,6 @@ public static boolean isDuplicate(String input, String[] arr, int size) {
   }
   return false; // No duplicate found
 }
+
+
 }
