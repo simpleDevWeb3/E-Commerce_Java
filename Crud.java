@@ -292,9 +292,9 @@ int numOfColor = 0;
         
         System.out.printf("Enter number of sizes available for  %s color_>",colors[i]);
         numOfSizes[i] = scanner.nextInt();
-        numOfSizes[i] = (numOfSizes[i] > 0) ?  numOfSizes[i] : 0;
-        isValid =  (numOfSizes[i] <= 0) ? false : true;
-        String err = isValid ? "":"Number must be more than 0";
+        numOfSizes[i] = (numOfSizes[i] > 0 && numOfSizes[i] <6) ?  numOfSizes[i] : 0;
+        isValid =  (numOfSizes[i] <= 0 && numOfSizes[i] <6) ? false : true;
+        String err = isValid ? "":"Number must be more than 0 and less than 6";
         System.out.println(err);
 
       } catch (InputMismatchException e) {
@@ -316,6 +316,7 @@ int numOfColor = 0;
 
 
   for (int i = 0; i < numOfColor; i++) {
+      //validate size x duplicate 
       Shoes.displaySize();
       System.out.printf("\n%d.) %s colors\n", (i + 1), colors[i]);
       System.out.println("========================================");
@@ -324,13 +325,28 @@ int numOfColor = 0;
       
           do {
              try {
-
+             //todo : validate size x duplicate
               System.out.printf("%d.) size  for color %s: ", (j + 1), colors[i]);
+
               int choice = scanner.nextInt()-1;
+              scanner.nextLine();
               isValid = (choice>= 0 && choice < Shoes.AVAILABLE_SIZES_CM.length) ? true : false;
-              eachSize[i][j] = isValid ? Shoes.AVAILABLE_SIZES_CM[choice] : 0; 
-              String feedback = isValid ? "Added succesfuly!" : "Choose 1 beetween " + Shoes.AVAILABLE_SIZES_CM.length;
-              System.out.println(feedback);
+        
+              
+              if (isValid) {
+                double size = Shoes.AVAILABLE_SIZES_CM[choice];
+
+                if (isDuplicate(size,eachSize[i],j)) {
+                    System.out.println(" Duplicate size! Please enter a unique size.");
+                    isValid = false;
+                } else {
+                    eachSize[i][j] = size;
+                    System.out.println(" Added successfully!");
+                }
+            } else {
+                System.out.println("Invalid choice! Choose between 1 and " + Shoes.AVAILABLE_SIZES_CM.length);
+            }
+
             } catch (InputMismatchException e) {
 
               System.out.println(" Invalid input! Please enter a number.");
@@ -351,10 +367,32 @@ int numOfColor = 0;
   for(int i = 0; i < numOfColor ; i++){
       
       stock[i]= new int[numOfSizes[i]];
+     
+      System.out.println("\nStock for "+ colors[i] + " Color");
+      System.err.println("---------------------------------");
       
     for(int j = 0; j < numOfSizes[i]; j++ ){
-       System.out.printf("Enter stock for %s (Size %s): ",colors[i],eachSize[i][j]);
-       stock[i][j] = scanner.nextInt();
+      do {
+        try {
+          System.out.printf("Enter stock for (Size %s): ",eachSize[i][j]);
+          stock[i][j] = scanner.nextInt();
+          isValid = (stock[i][j] >= 0  && stock[i][j] < 9999)? true  : false;
+
+          if(isValid){
+            stock[i][j] = stock[i][j];
+          }else{
+            System.out.println("Stock must be positive and less than 9999");
+          }
+            
+        } catch (InputMismatchException e) {
+          System.out.println(" Invalid input! Please enter a number.");
+          scanner.nextLine();
+          isValid = false;
+        }
+       
+      } while (!isValid);
+       
+       
      }
   }
 //#endregion
@@ -413,6 +451,7 @@ public static boolean isValidString(String input) {
 
 }
 
+//validate string only
 public static boolean isDuplicate(String input, String[] arr, int size) {
   for (int i = 0; i < size; i++) {
 
@@ -420,6 +459,18 @@ public static boolean isDuplicate(String input, String[] arr, int size) {
           return true; // Duplicate found
       }
   }
+  return false; // No duplicate found
+}
+
+
+public static boolean isDuplicate(double input, double[] arr, int size) {
+  for (int i = 0; i < size; i++) {
+
+      if (arr[i] == input) { 
+            return true; // Duplicate found
+       }
+  }
+
   return false; // No duplicate found
 }
 
