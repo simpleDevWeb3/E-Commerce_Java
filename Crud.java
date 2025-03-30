@@ -40,8 +40,8 @@ public class Crud{
 
                       
             case 3 ->{            
-                                        
-                        editProduct();
+                        Product selectedProduct =  inventory.filter(scanner);               
+                        editProduct(selectedProduct);
                     }
             case 4 ->{System.out.println( "Delete Product....");
 
@@ -65,22 +65,162 @@ public class Crud{
 }
 //#endregion
 //#region editProduct
-public void editProduct(){
- Product selectedProduct = inventory.filter(scanner);     
+public void editProduct(Product product){
+ boolean isValid = true;
+  Shoes  selectedProduct = (Shoes)product;
+ System.out.println("You choose to edit " + selectedProduct.getName());
+  if(selectedProduct != null){
+    do{
+      try{
+       
+          System.out.printf( "%-8s%s\n" ,"1.", " Edit category");
+          System.out.printf( "%-8s%s\n" ,"2.", " Edit name");
+          System.out.printf( "%-8s%s\n" ,"3.", " Edit Brand");
+          System.out.printf( "%-8s%s\n" ,"4.", " Edit Material");
+          System.out.printf( "%-8s%s\n" ,"5.", " Edit stock");
+          System.out.printf( "%-8s%s\n" ,"6.", " Edit price");
+          System.out.printf( "%-8s%s\n" ,"7.", " Back To Menu");
+          
+          System.out.print("\nChoose an option (1-7): ");
 
-  if(Product.getProductCount() > 0){
-  System.out.println("\n========= Edit Product =========");
-  System.out.printf( "%-8s%s\n" ,"1.", " Edit category");
-  System.out.printf( "%-8s%s\n" ,"2.", " Edit name");
-  System.out.printf( "%-8s%s\n" ,"3.", " Edit stock");
-  System.out.printf( "%-8s%s\n" ,"4.", " Edit price");
-  System.out.println("=================================");
- 
-  System.out.print("Choose an option: ");
-
-  int choice = scanner.nextInt();
-  scanner.nextLine();
+          int choice = scanner.nextInt();
+          scanner.nextLine();
+          switch(choice){
+            //#region update Category
+             case 1
+              ->{
+     
+                  Category selectedCategory = inventory.selectCategory(scanner);
+                  System.out.printf("Direct to %s Category\n",selectedCategory.getName());
+                  System.out.println("Current category: " + selectedProduct.getCategory().getName());
+                  String oldCat = selectedProduct.getCategory().getName();
+                  Category selectedSCategory = inventory.chooseSubCat(choice, scanner, selectedCategory.getSCategories());
+                 selectedProduct.setCategory(selectedSCategory);
+                 selectedProduct.setProductId(selectedSCategory);
+                 selectedProduct.displayProduct();
+                 System.out.println("Product's category updated  succesfully...");
+                 System.out.printf("%s changed to %s\n" , oldCat,selectedSCategory.getName());
+                 editProduct(selectedProduct);
+               }
+             //#endregion
+             
+           //#region update name
+             case 2
+              ->{
+                  do {
+               
+                     System.out.printf("Current product name -> %s\n",selectedProduct.getName());
+                     System.out.print("Enter new product name: ");
+                     String oldName = selectedProduct.getName();
+                     String newName = scanner.nextLine();
+                     isValid = isValidString(newName);
+                     if(isValid){
+                       selectedProduct.setName(newName);
+                       selectedProduct.displayProduct();
+                       System.out.printf("%s changed-> %s\n" , oldName,newName);
+                       editProduct(selectedProduct);
+                      
+                     }else{
+                       System.out.println("Invalid input, input must be words!");
+                       
+                     }
+              
+                           
+                  } while (isValid == false);              
+              }
+             //#endregion
+              
+            //#region update brand 
+             case 3 
+              ->{
+                   do {
+                   
+                     System.out.printf("Current product brand -> %s\n",selectedProduct.getBrand());
+                     System.out.print("Enter new product brand: ");
+                     String oldBrand= selectedProduct.getBrand();
+                     String newBrand = scanner.nextLine();
+                     isValid = isValidString(newBrand);
+                     if(isValid){
+                       selectedProduct.setBrand(newBrand);
+                       selectedProduct.displayProduct();
+                       System.out.printf("%s changed to %s\n" , oldBrand,newBrand);
+                       editProduct(selectedProduct);
+                     
+                     }else{
+                       System.out.println("Invalid input, input must be words!");
+                       
+                     }
+             
+                           
+                 } while (isValid == false);   
+              }
+            //#endregion
+              
+            case 4
+            ->{
+                String oldMaterial = selectedProduct.getMaterial();
+                String selectedMaterial = inventory.selectMaterial(scanner);
+               selectedProduct.setMaterial(selectedMaterial);
+       
+               selectedProduct.displayProduct();
+               System.out.println("Product's category updated  succesfully...");
+               System.out.printf("%s changed to %s\n" , oldMaterial,selectedMaterial);
+               editProduct(selectedProduct);
+            }
+     
+           //#region update price
+            case 6
+               ->{
+                 do {
+                  try {
+                   System.out.printf("Current product price -> %s\n",selectedProduct.getPrice());
+                   System.out.print("Enter new product price: ");
+                   double oldPrice = selectedProduct.getPrice();
+                   double newPrice = scanner.nextDouble();
+                   isValid = (newPrice > 0 && newPrice <9999);
+                   if(isValid){
+                     selectedProduct.setPrice(newPrice);
+                     selectedProduct.displayProduct();
+                     System.out.printf("RM%s changed to RM%s\n" , oldPrice,newPrice);
+                     editProduct(selectedProduct);
+                    
+                   }else{
+                     System.out.println("Price must be more than 0 and less than 9999");
+                     isValid = false;
+                   }
+                      
+                  } catch (InputMismatchException e) {
+                    System.out.println("Invalid input ,Input must be number!");
+                    scanner.nextLine();
+                    isValid = false;
+                  }
+                                  
+                 } while (isValid == false);
+               }
+             //#endregion
+             case 7
+              ->{
+                 System.out.println("Back to menu......"); 
+                 displayMenu();
+               }
+     
+             default 
+             ->{
+               System.out.println("Select between 1-7");
+               isValid = false;
+             }
+         }
+        }catch(InputMismatchException e){
+          System.out.println("Input must be number!");
+          scanner.nextLine();
+          isValid = false;
+         
+      }
+    }while (!isValid); 
+   
   }
+
+
  
 }
 //#endregion
@@ -448,6 +588,7 @@ char choice;
       if (choice == 'y') {
           inventory.addProduct(shoe);
           System.out.println(" Product added successfully!");
+          inventory.disProductData();
       } else if (choice == 'n') {
           System.out.println(" Product addition canceled.");
       } else {

@@ -1,3 +1,7 @@
+
+
+
+
 public class Product{
   private String id; 
   private String pName;
@@ -35,7 +39,8 @@ public static int getProductCount(){
  public double getPrice(){return price;}
 
  public void setPrice(double price){this.price = price;}
- 
+ public void setCategory (Category category){this.category = category;}
+ public void setProductId (Category category){this.id = IdGenerator.generateProductId(category.getName());}
  public void setQuantity (int quantity){this.quantity = quantity;}
 
  public int getQuantity (){return quantity;}

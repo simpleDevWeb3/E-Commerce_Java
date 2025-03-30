@@ -242,34 +242,18 @@ public void disProductData(Product [] subCatProduct){
  //#endregion    
 
  //#region displayAllProduct param: scanner  (display product's detail)   
-    public void displayAllProduct(Scanner scanner) {
-       // disProductList();
-        disProductData();
-    if(Product.getProductCount()> 0){
-        try{
-            System.out.print("Choose an index (1 - " + products.length + "): ");
-            int index = scanner.nextInt();
-    
-            if (index >= 1 && index <= products.length) {
-              Product selectedProduct = products[index-1];
-              displayProductDetails(selectedProduct);
-                
-            } 
-            else {
-                System.out.println("Invalid index! Please choose a valid product index.");
-                displayAllProduct(scanner);
-            }
-         }catch(InputMismatchException e){
-            System.out.println(" Invalid input! Please enter a number.");
-            scanner.next(); // Clear invalid input
-            displayAllProduct(scanner);
-         }
-    }else{
-        System.out.println("back to menu...");
-    }
-    
+ public Product displayAllProduct(Scanner scanner) {
+    if (Product.getProductCount() > 0) {
+        disProductData(); // Ensure this displays all products
        
+    } else {
+        System.out.println("No products available. Returning to menu...");
+        return null; // Fix: Ensure function always returns a Product or null
     }
+    Product selectedProduct = chooseProduct( products, scanner);
+    displayProductDetails(selectedProduct);
+    return selectedProduct ;
+}
   //#endregion	
 
 //#region displayProductDetails param: Product product
@@ -395,10 +379,12 @@ public Product displayProductByCat(Scanner scanner) {
             disProductData(subCatProduct); // Display products
 
             if (subCatProduct.length > 0) {  
-                return chooseProduct(subCatProduct, scanner); // Select one product
+                Product selectedProduct  =chooseProduct(subCatProduct, scanner);// Select one product
+                displayProductDetails(selectedProduct);
+                return  selectedProduct ;
             } else {
                 System.out.println("No products found in this category.");
-                return null;
+                return displayProductByCat(scanner);
             }
         } else {
             System.out.println("Not a valid choice!");
@@ -414,28 +400,28 @@ public Product displayProductByCat(Scanner scanner) {
 //#endregion
  
 //#region chooseProduct param: Product[] products, Scanner scanner -> accept user input for choosing product return product object
-public Product chooseProduct(Product[] products, Scanner scanner){
-
-     System.out.print("Choose Product: ");
-     int choice = scanner.nextInt();
-    try {
-        if(choice > 0 && choice <= products.length){
-
-            Product selectedProduct = products[choice-1];
-    
-            return (selectedProduct instanceof Shoes) ? (Shoes)selectedProduct : selectedProduct;
-         }
+public Product chooseProduct(Product[] products, Scanner scanner) {
+    while (true) { // Keep looping until a valid choice is made
+        System.out.print("Choose Product (1 - " + products.length + "): ");
         
-    } catch (InputMismatchException e) {
-        System.out.println("Not a choice"); 
-        scanner.nextLine();
-        return chooseProduct(products, scanner);
+        if (!scanner.hasNextInt()) { // Check if input is NOT an integer
+            System.out.println("Invalid input! Please enter a number.");
+            scanner.next(); // Clear invalid input
+            continue; // Restart loop
+        }
+
+        int choice = scanner.nextInt();
+        scanner.nextLine(); // Consume newline
+
+        if (choice > 0 && choice <= products.length) {
+            Product selectedProduct = products[choice - 1];
+            return (selectedProduct instanceof Shoes) ? (Shoes) selectedProduct : selectedProduct;
+        } else {
+            System.out.println("Invalid choice! You can only choose between 1 - " + products.length);
+        }
     }
-     
-     System.out.println("You can only Choose 1-" + products.length);
-    
-     return chooseProduct(products, scanner);
- }
+}
+
 //#endregion
  
 //Globally use* 
@@ -454,8 +440,8 @@ public Product chooseProduct(Product[] products, Scanner scanner){
 
         switch (choice) {
             case 1 -> {
-                displayAllProduct(scanner);
-                return chooseProduct(Inventory.getProducts(), scanner); // Select one product
+            
+                return displayAllProduct(scanner); // Select one product
             }
             case 2 -> {
                 return displayProductByCat(scanner); // Select one product by category
@@ -508,6 +494,64 @@ public Product chooseProduct(Product[] products, Scanner scanner){
 
 }
 
+public Category selectCategory(Scanner scanner){
+    boolean isValid =  true;
+    do { 
+        try {
+              
+            displayCategories();
+            System.out.printf("Choose main category (1-%d)" , categories.length);
+            int choice = scanner.nextInt();
+            
+            if(choice > 0 && choice < categories.length){
+                Category selectedCategory = categories[choice-1];
+                return selectedCategory;
+            }else{
+                System.out.printf("Choose between 1-%d",categories.length);
+                isValid = false;
+            }
+       
+            
+        } catch (InputMismatchException e) {
+            System.out.println("Input invalid.Must be number");
+            scanner.nextLine();
+            isValid = false;
+        }
+    } while (!isValid);
+
+ 
+   return  selectCategory(scanner);
+}
+
+public String selectMaterial(Scanner scanner){
+    boolean isValid = true;
+   
+    do { 
+        try {
+        
+            Shoes.displayMaterials();
+            System.out.printf("Select material (1-%s): ",Shoes.AVAILABLE_MATERIALS.length);
+            int choice = scanner.nextInt() - 1;
+
+            if(choice >= 0 && choice < Shoes.AVAILABLE_MATERIALS.length){
+                String selectedMaterials = Shoes.AVAILABLE_MATERIALS[choice];
+                return selectedMaterials;
+            }else{
+                System.out.printf("Choose beetween 1-%s",Shoes.AVAILABLE_MATERIALS.length);
+                isValid = false;
+            }
+         
+          
+        } catch (InputMismatchException e) {
+            System.out.println("Input invalid.Must be number");
+            scanner.nextLine();
+            isValid = false;
+        }
+        
+    } while (!isValid);
+
+    return selectMaterial(scanner);
+  }
     
     
 }
