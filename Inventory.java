@@ -3,8 +3,8 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Inventory {
-    private Category[] categories;
-    private Product[] products;
+    private static  Category[] categories;
+    private static Product[] products;
    
 
    
@@ -127,62 +127,70 @@ public void displaySCategories(Category[] subCat){
 //#region disProductData 
 
 public void disProductData(){
-    
-    int i = 1;
-    System.out.println("------------------------------------------------------");
-    System.out.printf("%-4s\t%-25s%-15s%-4s\n", "No.", "Name", "Price(RM)","Stock");
-    System.out.println("------------------------------------------------------");
-    for(Product p : products){
-        if (p instanceof Shoes) {
-            Shoes shoe = (Shoes) p; // Downcasting to Shoes
-            System.out.printf("%d.)\t%-25s%-15.2f%d\n",
-                    i++,
-                    shoe.getName(),
-                    shoe.getPrice(),
-                    shoe.getTotalStock() // Using Shoes method
-            );
-        } else {
-            // For other products, display without stock info
-            System.out.printf("%d.)\t%-25s%-15.2f%d\n",
-                    i++,
-                    p.getName(),
-                    p.getPrice(),
-                    p.getQuantity()
-            );
+    if(Product.getProductCount()>0){
+        int i = 1;
+        System.out.println("------------------------------------------------------");
+        System.out.printf("%-4s\t%-25s%-15s%-4s\n", "No.", "Name", "Price(RM)","Stock");
+        System.out.println("------------------------------------------------------");
+        for(Product p : products){
+            if (p instanceof Shoes) {
+                Shoes shoe = (Shoes) p; // Downcasting to Shoes
+                System.out.printf("%d.)\t%-25s%-15.2f%d\n",
+                        i++,
+                        shoe.getName(),
+                        shoe.getPrice(),
+                        shoe.getTotalStock() // Using Shoes method
+                );
+            } else {
+                // For other products, display without stock info
+                System.out.printf("%d.)\t%-25s%-15.2f%d\n",
+                        i++,
+                        p.getName(),
+                        p.getPrice(),
+                        p.getQuantity()
+                );
+            }
         }
+        System.out.println("------------------------------------------------------");
+    }else{
+        System.out.println("Product not available");
     }
-    System.out.println("------------------------------------------------------");
+  
 
 }
 //#endregion disProductData
 //#region disProductData overload params: Product []subCatProduct 
 
 public void disProductData(Product [] subCatProduct){
-    
-    int i = 1;
-    System.out.println("------------------------------------------------------");
-    System.out.printf("%-4s\t%-25s%-15s%-4s\n", "No.", "Name", "Price(RM)","Stock");
-    System.out.println("------------------------------------------------------");
-    for(Product p : subCatProduct){
-        if (p instanceof Shoes) {
-            Shoes shoe = (Shoes) p; // Downcasting to Shoes
-            System.out.printf("%d.)\t%-25s%-15.2f%d\n",
-                    i++,
-                    shoe.getName(),
-                    shoe.getPrice(),
-                    shoe.getTotalStock() // Using Shoes method
-            );
-        } else {
-            // For other products, display without stock info
-            System.out.printf("%d.)\t%-25s%-15.2f%d\n",
-                    i++,
-                    p.getName(),
-                    p.getPrice(),
-                    p.getQuantity()
-            );
+    if(subCatProduct.length > 0){
+        int i = 1;
+        System.out.println("------------------------------------------------------");
+        System.out.printf("%-4s\t%-25s%-15s%-4s\n", "No.", "Name", "Price(RM)","Stock");
+        System.out.println("------------------------------------------------------");
+        for(Product p : subCatProduct){
+            if (p instanceof Shoes) {
+                Shoes shoe = (Shoes) p; // Downcasting to Shoes
+                System.out.printf("%d.)\t%-25s%-15.2f%d\n",
+                        i++,
+                        shoe.getName(),
+                        shoe.getPrice(),
+                        shoe.getTotalStock() // Using Shoes method
+                );
+            } else {
+                // For other products, display without stock info
+                System.out.printf("%d.)\t%-25s%-15.2f%d\n",
+                        i++,
+                        p.getName(),
+                        p.getPrice(),
+                        p.getQuantity()
+                );
+            }
         }
+        System.out.println("------------------------------------------------------");
+    }else{
+        System.out.println("Product not available");
     }
-    System.out.println("------------------------------------------------------");
+    
 
 }
 //#endregion disProductData
@@ -237,24 +245,29 @@ public void disProductData(Product [] subCatProduct){
     public void displayAllProduct(Scanner scanner) {
        // disProductList();
         disProductData();
-     try{
-        System.out.print("Choose an index (1 - " + products.length + "): ");
-        int index = scanner.nextInt();
-
-        if (index >= 1 && index <= products.length) {
-          Product selectedProduct = products[index-1];
-          displayProductDetails(selectedProduct);
-            
-        } 
-        else {
-            System.out.println("Invalid index! Please choose a valid product index.");
+    if(Product.getProductCount()> 0){
+        try{
+            System.out.print("Choose an index (1 - " + products.length + "): ");
+            int index = scanner.nextInt();
+    
+            if (index >= 1 && index <= products.length) {
+              Product selectedProduct = products[index-1];
+              displayProductDetails(selectedProduct);
+                
+            } 
+            else {
+                System.out.println("Invalid index! Please choose a valid product index.");
+                displayAllProduct(scanner);
+            }
+         }catch(InputMismatchException e){
+            System.out.println(" Invalid input! Please enter a number.");
+            scanner.next(); // Clear invalid input
             displayAllProduct(scanner);
-        }
-     }catch(InputMismatchException e){
-        System.out.println(" Invalid input! Please enter a number.");
-        scanner.next(); // Clear invalid input
-        displayAllProduct(scanner);
-     }
+         }
+    }else{
+        System.out.println("back to menu...");
+    }
+    
        
     }
   //#endregion	
@@ -368,31 +381,36 @@ public void disProductData(Product [] subCatProduct){
 //#endregion
    
 //#region diplayProductByCat param: scanner -> display product by category
-public void displayProductByCat(Scanner scanner){
-         displayCategories();
-          try{ 
-            System.out.print("Choose category: ");
-            int choice = scanner.nextInt();
-            scanner.nextLine();
-            if(choice > 0 && choice <= categories.length){
-              Product[] subCatProduct = getSubCatProduct(choice-1, scanner);
+public Product displayProductByCat(Scanner scanner) {
+    displayCategories();
+    
+    try {
+        System.out.print("Choose category: ");
+        int choice = scanner.nextInt();
+        scanner.nextLine();
 
-              disProductData(subCatProduct);
-        
-              Product selectedProduct = chooseProduct(subCatProduct , scanner);
-              System.out.println("You want to edit--->" + selectedProduct.getName());
-              displayProductDetails(selectedProduct);
-          
-            } else{System.out.println("Not a choice"); displayProductByCat(scanner);};
-    
-        }catch(InputMismatchException e){ 
-          System.out.println(" Invalid input! Please enter a number.");
-          scanner.next();
-          displayProductByCat(scanner);
+        if (choice > 0 && choice <= categories.length) {
+            Product[] subCatProduct = getSubCatProduct(choice - 1, scanner);
+
+            disProductData(subCatProduct); // Display products
+
+            if (subCatProduct.length > 0) {  
+                return chooseProduct(subCatProduct, scanner); // Select one product
+            } else {
+                System.out.println("No products found in this category.");
+                return null;
+            }
+        } else {
+            System.out.println("Not a valid choice!");
+            return displayProductByCat(scanner);  // Recursive call
         }
-       
-    
-      }
+    } catch (InputMismatchException e) {
+        System.out.println("Invalid input! Please enter a number.");
+        scanner.next();
+        return displayProductByCat(scanner);
+    }
+}
+
 //#endregion
  
 //#region chooseProduct param: Product[] products, Scanner scanner -> accept user input for choosing product return product object
@@ -425,39 +443,42 @@ public Product chooseProduct(Product[] products, Scanner scanner){
 //display filtered product
  //All
  //Cateogory
- public void filter(Scanner scanner){
+ public Product filter(Scanner scanner) {
     try {
-        System.out.println( "\n====================");
-        System.out.println("1. Display all product");
+        System.out.println("\n====================");
+        System.out.println("1. Display all products");
         System.out.println("2. Display by category");
-        System.out.println( "========================");
-        System.out.print("Choice(1-2): ");
+        System.out.println("========================");
+        System.out.print("Choice (1-2): ");
         int choice = scanner.nextInt();
-        switch(choice){
-          case 1 ->{ displayAllProduct(scanner);}
-          case 2 ->{ displayProductByCat(scanner);}
-          default ->{
-                      System.out.println("Invalid Choice only can choose 1-2");
-                       filter(scanner);
-                    }
+
+        switch (choice) {
+            case 1 -> {
+                displayAllProduct(scanner);
+                return chooseProduct(Inventory.getProducts(), scanner); // Select one product
+            }
+            case 2 -> {
+                return displayProductByCat(scanner); // Select one product by category
+            }
+            default -> {
+                System.out.println("Invalid Choice! Choose 1-2.");
+                return filter(scanner);
+            }
         }
-        
     } catch (InputMismatchException e) {
-        System.out.println(" Invalid input! Please enter a number.");
+        System.out.println("Invalid input! Please enter a number.");
         scanner.next();
-        filter(scanner);
+        return filter(scanner);
     }
-   
-  
-  }
+}
 //#endregion
 
 
- public Category[] getCategories() {
+ public static Category[] getCategories() {
      return categories;
  }
 
- public Product[] getProducts() {
+ public static Product[] getProducts() {
         return products;
  }
 

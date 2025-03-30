@@ -40,7 +40,7 @@ public class Crud{
 
                       
             case 3 ->{            
-                        inventory.filter(scanner);                     
+                                        
                         editProduct();
                     }
             case 4 ->{System.out.println( "Delete Product....");
@@ -66,6 +66,9 @@ public class Crud{
 //#endregion
 //#region editProduct
 public void editProduct(){
+ Product selectedProduct = inventory.filter(scanner);     
+
+  if(Product.getProductCount() > 0){
   System.out.println("\n========= Edit Product =========");
   System.out.printf( "%-8s%s\n" ,"1.", " Edit category");
   System.out.printf( "%-8s%s\n" ,"2.", " Edit name");
@@ -77,28 +80,34 @@ public void editProduct(){
 
   int choice = scanner.nextInt();
   scanner.nextLine();
+  }
+ 
 }
 //#endregion
 //#region deleteProduct
 public void deleteProduct(){
   boolean isValid = true;
-  try {
-    System.out.println("\n=========Delete product =========");
-    Product selectedProduct =inventory.chooseProduct(inventory.getProducts(), scanner);
-    String productId = selectedProduct.getId();
-    isValid = (selectedProduct!= null) ? true : false;
-    if(isValid){
-      inventory.deleteProduct(productId);
-    }
-  
-    System.out.println("=================================");
-    
-  } catch (InputMismatchException e) {
-    System.out.println(" Invalid input! Please enter a number.");
-    scanner.nextLine();
-    deleteProduct();
-  };
+  if(Product.getProductCount() > 0){
+    try {
 
+      System.out.println("\n=========Delete product =========");
+      Product selectedProduct =inventory.chooseProduct(inventory.getProducts(), scanner);
+      String productId = selectedProduct.getId();
+      isValid = (selectedProduct!= null) ? true : false;
+      if(isValid){
+        inventory.deleteProduct(productId);
+      }
+    
+      System.out.println("=================================");
+      
+    } catch (InputMismatchException e) {
+      System.out.println(" Invalid input! Please enter a number.");
+      scanner.nextLine();
+      deleteProduct();
+    };
+  
+  }
+  
 }
 //#endregion
 //#region addProduct()

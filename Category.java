@@ -5,6 +5,7 @@ public class Category {
   private String cName;// cat_name
   private Category pCategory;// refrence to main_cat
   private Category[] sCategories; // array store subcat
+  private int sCatProdCount = 0;
  
   public Category(){
 
@@ -26,6 +27,19 @@ public class Category {
   public String getName(){return cName;}
   public Category getPCategory(){return pCategory;}
   public Category[] getSCategories(){return sCategories;}
+  
+  public int getSCatProdCount(){
+    for(Category sCategory : sCategories){
+      for(Product product:Inventory.getProducts()){
+        if(product.getCategory().getId().equals(sCategory.getId())){
+          sCatProdCount+=1;
+        }
+      }
+        
+       
+    }
+    return sCatProdCount;
+  }
 
   public void addSubcategory(Category subcategory){
     //expand array

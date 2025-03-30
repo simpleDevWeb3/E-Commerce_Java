@@ -24,7 +24,7 @@ public class Main {
   //System.out.println("DEBUG: Actual products array length: " + i.getProducts().length);
 System.out.println("DEBUG: Stored product count: " + Product.getProductCount());
   //i.disProductList();*/
-  Product.getProductCount();
+ 
   
   }
 }
