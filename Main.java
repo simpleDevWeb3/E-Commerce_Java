@@ -2,7 +2,7 @@ import java.util.Scanner;
 public class Main {
   public static void main(String []args){
     Scanner scanner = new Scanner(System.in);
-   Inventory i = new Inventory();
+   //Inventory i = new Inventory();
    Crud c = new Crud();
    
    //i.displayCategories();/*<=display main category exist in inventory */
@@ -16,9 +16,15 @@ public class Main {
  
 
   c.displayMenu();
-  
-  //i.disProductList();
-  
+
+  //i.getProducts();
+ /*  for(Product product :  i.getProducts()){
+      System.out.println(product.getProductCount());
+  }
+  //System.out.println("DEBUG: Actual products array length: " + i.getProducts().length);
+System.out.println("DEBUG: Stored product count: " + Product.getProductCount());
+  //i.disProductList();*/
+  Product.getProductCount();
   
   }
 }

@@ -17,6 +17,8 @@ public class Shoes extends Product {
     this.size = size;
     this.stock = stock;
     this.material = material;
+    
+    
 }
 
 

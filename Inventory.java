@@ -410,10 +410,12 @@ public Product chooseProduct(Product[] products, Scanner scanner){
         
     } catch (InputMismatchException e) {
         System.out.println("Not a choice"); 
+        scanner.nextLine();
         return chooseProduct(products, scanner);
     }
      
      System.out.println("You can only Choose 1-" + products.length);
+    
      return chooseProduct(products, scanner);
  }
 //#endregion
@@ -458,6 +460,32 @@ public Product chooseProduct(Product[] products, Scanner scanner){
  public Product[] getProducts() {
         return products;
  }
+
+ public void deleteProduct(String productId) {
+    int productCount = Product.getProductCount();
+    int newIndex = 0;
+
+    // Create a new array with the correct size
+    Product[] newProducts = new Product[productCount - 1];
+
+    for (int i = 0; i < productCount; i++) {
+        if (products[i].getId().equals(productId)) {
+            //Skip the product
+            continue;
+        }
+        // Ensure we don't go out of bounds
+        if (newIndex < newProducts.length) {
+            newProducts[newIndex++] = products[i];
+        }
+    }
+
+
+        products = newProducts;
+        Product.decreaseProductCount(); // Ensure count is updated
+        System.out.println("Product deleted successfully.");
+        disProductData();
+
+}
 
     
     

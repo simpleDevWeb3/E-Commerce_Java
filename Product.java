@@ -3,6 +3,7 @@ public class Product{
   private String pName;
   private double price;
   private int quantity;
+  private static int productCount;
   Category category;
  
  
@@ -11,17 +12,21 @@ public class Product{
   }
 
   public Product(String pName, double price, int quantity,Category category){
+    productCount++;
+    System.out.println("DEBUG: Product created. Current count: " + productCount);
       this.id = IdGenerator.generateProductId(category.getName());
       this.pName = pName;
       this.price = price;
       this.quantity = quantity;
       this.category = category;
-     
+      
   }
 
  public String getId(){ return id;}
 
-
+public static int getProductCount(){
+  return productCount;
+}
 
  public String getName(){return pName;}
 
@@ -37,7 +42,11 @@ public class Product{
 
  public Category getCategory(){return category;}
  
-
+ public static void decreaseProductCount() {
+  if (productCount > 0) {
+      productCount--; // Decrease only if count is greater than zero
+  }
+}
 
  public void displayProduct() {
   System.out.println("--------------------------------------------------");

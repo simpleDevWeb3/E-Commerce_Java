@@ -40,13 +40,12 @@ public class Crud{
 
                       
             case 3 ->{            
-                        inventory.filter(scanner);
-                      
+                        inventory.filter(scanner);                     
                         editProduct();
                     }
             case 4 ->{System.out.println( "Delete Product....");
 
-                        inventory.filter(scanner);
+                        inventory.disProductData();
                               
                         deleteProduct();  
                      }
@@ -82,9 +81,24 @@ public void editProduct(){
 //#endregion
 //#region deleteProduct
 public void deleteProduct(){
-  System.out.println("\n=========Delete product =========");
-  System.out.println("  Select product: " );
-  System.out.println("=================================");
+  boolean isValid = true;
+  try {
+    System.out.println("\n=========Delete product =========");
+    Product selectedProduct =inventory.chooseProduct(inventory.getProducts(), scanner);
+    String productId = selectedProduct.getId();
+    isValid = (selectedProduct!= null) ? true : false;
+    if(isValid){
+      inventory.deleteProduct(productId);
+    }
+  
+    System.out.println("=================================");
+    
+  } catch (InputMismatchException e) {
+    System.out.println(" Invalid input! Please enter a number.");
+    scanner.nextLine();
+    deleteProduct();
+  };
+
 }
 //#endregion
 //#region addProduct()
@@ -370,7 +384,7 @@ int numOfColor = 0;
      
       System.out.println("\nStock for "+ colors[i] + " Color");
       System.err.println("---------------------------------");
-      
+
     for(int j = 0; j < numOfSizes[i]; j++ ){
       do {
         try {
@@ -446,6 +460,7 @@ public void addCategory(){
 //#endregion
 
 
+//#region inner validation method
 public static boolean isValidString(String input) {
   return input.matches("[a-zA-Z ]+"); // Allows only letters and spaces
 
@@ -474,5 +489,5 @@ public static boolean isDuplicate(double input, double[] arr, int size) {
   return false; // No duplicate found
 }
 
-
+//#endregion
 }
