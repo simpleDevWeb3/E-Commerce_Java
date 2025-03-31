@@ -9,7 +9,9 @@ private static int prodCount = 1;
 }
 
 public static String generateCategoryId(String prefix) {
-    return prefix.replace(" ", "") + "_" + (catCount++);
+   String id = prefix.replace(" ", "") + "_" + (catCount);
+   catCount++;
+   return  id;
 }
 
 

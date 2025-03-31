@@ -763,7 +763,7 @@ public void addCategory() {
       String sName = scanner.nextLine();
       
       Category newSCategory = new Category(sName, newCategory);
-      inventory.addCategory(newSCategory); // Corrected to add the subcategory
+      newCategory.addSubcategory(newSCategory); // Corrected to add the subcategory
   }
 
   System.out.println("=================================");

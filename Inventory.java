@@ -3,70 +3,147 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Inventory {
-    private static  Category[] categories;
+    private static Category[] categories;
     private static Product[] products;
-   
 
-   
+    //#region Data
+    // Main Categories for Shoes
+    Category casualWear = new Category("Casual Wear", null);
+    Category formalWear = new Category("Formal Wear", null);
+    Category sportsOutdoor = new Category("Sports & Outdoor", null);
+    Category seasonalShoes = new Category("Seasonal & Special Occasion", null);
+    Category workSafety = new Category("Work & Safety Shoes", null);
+    Category fashionLuxury = new Category("Fashion & Luxury", null);
 
-//#region  Data
-    Category menWear = new Category("Men Wear", null);
-    Category womenWear = new Category("Women Wear", null);
+    // Subcategories under each main category
+    Category sneakers = new Category("Sneakers", casualWear);
+    Category loafers = new Category("Loafers", casualWear);
+    Category slipOns = new Category("Slip-Ons", casualWear);
     
-    //------------------Sub Categories-------------------------------//
-    Category menSportShoes = new Category("Men Sport Shoes", menWear);
-    Category menSandal = new Category("Men Sandal", menWear);
-    Category womenSportShoes = new Category("Women Sport Shoes", womenWear);
-//#endregion Data
-//#region Constructor
+    Category oxfords = new Category("Oxfords", formalWear);
+    Category derbyShoes = new Category("Derby Shoes", formalWear);
+    Category dressBoots = new Category("Dress Boots", formalWear);
+    
+    Category runningShoes = new Category("Running Shoes", sportsOutdoor);
+    Category hikingBoots = new Category("Hiking Boots", sportsOutdoor);
+    Category cleats = new Category("Cleats", sportsOutdoor);
+    
+    Category sandals = new Category("Sandals", seasonalShoes);
+    Category winterBoots = new Category("Winter Boots", seasonalShoes);
+    
+    Category steelToeBoots = new Category("Steel-Toe Boots", workSafety);
+    Category nonSlipShoes = new Category("Non-Slip Shoes", workSafety);
+    
+    Category designerShoes = new Category("Designer Shoes", fashionLuxury);
+    Category highEndBoots = new Category("High-End Boots", fashionLuxury);
+
+    //#endregion Data
+
+    //#region Constructor
     public Inventory() {
+        // Main Categories
         categories = new Category[]{
-            menWear,
-            womenWear        
+            casualWear, formalWear, sportsOutdoor, seasonalShoes, workSafety, fashionLuxury
         };
 
+        // Adding Subcategories
+        casualWear.addSubcategory(sneakers);
+        casualWear.addSubcategory(loafers);
+        casualWear.addSubcategory(slipOns);
+        
+        formalWear.addSubcategory(oxfords);
+        formalWear.addSubcategory(derbyShoes);
+        formalWear.addSubcategory(dressBoots);
+        
+        sportsOutdoor.addSubcategory(runningShoes);
+        sportsOutdoor.addSubcategory(hikingBoots);
+        sportsOutdoor.addSubcategory(cleats);
+        
+        seasonalShoes.addSubcategory(sandals);
+        seasonalShoes.addSubcategory(winterBoots);
+        
+        workSafety.addSubcategory(steelToeBoots);
+        workSafety.addSubcategory(nonSlipShoes);
+        
+        fashionLuxury.addSubcategory(designerShoes);
+        fashionLuxury.addSubcategory(highEndBoots);
+
+        // Adding Products (1 per Subcategory) with sizes in CM
         products = new Product[]{
-            new Shoes(
-                "Adidas Running Max", 350.00, menSportShoes, "Adidas",
-                new String[]{"Black", "White"},
-                new double[][]{
-                    {7, 8, 9}, // Black sizes
-                    {6, 7}     // White sizes
-                },
-                new int[][]{
-                    {5, 3, 7}, // Stock for Black
-                    {6, 2}     // Stock for White
-                },
-                "Mesh"
-            ),
-            new Shoes(
-                "Nike Air Zoom", 400.00, menSportShoes, "Nike",
-                new String[]{"Blue", "Red","Pink"},
-                new double[][]{
-                    {8, 9, 10}, // Blue sizes
-                    {7, 8},     // Red sizes
-                    {7, 8}      // Pink sizes    
-                },
-                new int[][]{
-                    {4, 6, 8}, // Stock for Blue
-                    {5, 9},    // Stock for Red
-                    {15, 9}    // Stock for Pink
-                },
-                "Synthetic Leather"
-            ),
-            new Shoes(
-                "Puma Sports", 280.00, womenSportShoes, "Puma",
-                new String[]{"Pink", "Grey"},
-                new double[][]{
-                    {6, 7, 8}, // Pink sizes
-                    {5, 6}     // Grey sizes
-                },
-                new int[][]{
-                    {8, 6, 3}, // Stock for Pink
-                    {4, 5}     // Stock for Grey
-                },
-                "Knit Fabric"
-            )
+            new Shoes("Nike Air Force 1", 120.00, sneakers, "Nike",
+                new String[]{"White", "Black"},
+                new double[][]{{24.0, 25.0, 26.0}, {25.5, 26.5, 27.5}},
+                new int[][]{{5, 3, 7}, {4, 6, 8}}, "Leather"),
+            
+            new Shoes("Clarks Leather Loafers", 150.00, loafers, "Clarks",
+                new String[]{"Brown", "Black"},
+                new double[][]{{25.0, 26.0, 27.0}, {24.5, 25.5, 26.5}},
+                new int[][]{{6, 5, 4}, {3, 7, 6}}, "Genuine Leather"),
+            
+            new Shoes("Vans Classic Slip-On", 90.00, slipOns, "Vans",
+                new String[]{"White", "Grey"},
+                new double[][]{{23.0, 24.0, 25.0}, {24.5, 25.5, 26.5}},
+                new int[][]{{10, 12, 9}, {7, 8, 6}}, "Canvas"),
+            
+            new Shoes("Allen Edmonds Park Avenue", 300.00, oxfords, "Allen Edmonds",
+                new String[]{"Black"},
+                new double[][]{{25.0, 26.0, 27.0}},
+                new int[][]{{4, 6, 3}}, "Premium Leather"),
+            
+            new Shoes("Dr. Martens Derby", 200.00, derbyShoes, "Dr. Martens",
+                new String[]{"Brown"},
+                new double[][]{{26.0, 27.0, 28.0}},
+                new int[][]{{5, 8, 4}}, "Full-Grain Leather"),
+            
+            new Shoes("Timberland Dress Boots", 250.00, dressBoots, "Timberland",
+                new String[]{"Black"},
+                new double[][]{{26.0, 27.0, 28.0}},
+                new int[][]{{6, 7, 4}}, "Leather"),
+            
+            new Shoes("Nike Zoom Pegasus", 180.00, runningShoes, "Nike",
+                new String[]{"Blue", "Red"},
+                new double[][]{{24.0, 25.0, 26.0}, {25.5, 26.5, 27.5}},
+                new int[][]{{8, 5, 4}, {3, 6, 7}}, "Mesh"),
+            
+            new Shoes("Salomon Quest 4D", 250.00, hikingBoots, "Salomon",
+                new String[]{"Green", "Black"},
+                new double[][]{{26.0, 27.0, 28.0}, {28.5, 29.0, 30.0}},
+                new int[][]{{7, 6, 4}, {5, 3, 2}}, "Waterproof Synthetic"),
+            
+            new Shoes("Adidas Predator Cleats", 220.00, cleats, "Adidas",
+                new String[]{"White", "Black"},
+                new double[][]{{25.0, 26.0, 27.0}, {27.5, 28.0, 29.0}},
+                new int[][]{{5, 8, 7}, {6, 4, 3}}, "Synthetic Leather"),
+            
+            new Shoes("Birkenstock Arizona", 80.00, sandals, "Birkenstock",
+                new String[]{"Brown", "Black"},
+                new double[][]{{24.0, 25.0, 26.0}, {27.0, 28.0, 29.0}},
+                new int[][]{{7, 6, 5}, {8, 9, 4}}, "Leather & Cork"),
+            
+            new Shoes("UGG Classic Winter Boots", 190.00, winterBoots, "UGG",
+                new String[]{"Beige"},
+                new double[][]{{26.0, 27.0, 28.0}},
+                new int[][]{{10, 7, 6}}, "Suede & Fur"),
+            
+            new Shoes("Caterpillar Steel-Toe Boots", 220.00, steelToeBoots, "Caterpillar",
+                new String[]{"Brown"},
+                new double[][]{{27.0, 28.0, 29.0}},
+                new int[][]{{6, 4, 3}}, "Steel Toe"),
+            
+            new Shoes("Skechers Work Shoes", 130.00, nonSlipShoes, "Skechers",
+                new String[]{"Black"},
+                new double[][]{{25.0, 26.0, 27.0}},
+                new int[][]{{8, 6, 5}}, "Slip Resistant"),
+            
+            new Shoes("Gucci Leather Sneakers", 400.00, designerShoes, "Gucci",
+                new String[]{"White", "Black"},
+                new double[][]{{24.5, 25.5, 26.5}, {27.0, 28.0, 29.0}},
+                new int[][]{{4, 6, 5}, {5, 7, 3}}, "Italian Leather"),
+            
+            new Shoes("Louis Vuitton High-End Boots", 600.00, highEndBoots, "Louis Vuitton",
+                new String[]{"Brown"},
+                new double[][]{{26.0, 27.0, 28.0}},
+                new int[][]{{3, 4, 2}}, "Luxury Leather")
         };
     }        
 //#endregion Constructor

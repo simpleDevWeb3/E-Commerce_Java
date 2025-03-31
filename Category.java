@@ -17,10 +17,7 @@ public class Category {
       this.pCategory = pCategory;
       sCategories = new Category[0];
 
-    //it will add subcategory to the array sCategories
-      if (pCategory != null) {
-        pCategory.addSubcategory(this);
-    }
+   
   }
 
   public String getId(){ return id;}
@@ -29,6 +26,7 @@ public class Category {
   public Category[] getSCategories(){return sCategories;}
   
   public int getSCatProdCount(){
+    sCatProdCount = 0; 
     for(Category sCategory : sCategories){
       for(Product product:Inventory.getProducts()){
         if(product.getCategory().getId().equals(sCategory.getId())){
