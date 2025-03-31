@@ -19,7 +19,7 @@ public class Crud{
           System.out.println("\n========= Inventory System =========");
           System.out.printf("%-10s%s\n","1." ," Add Categories");
           System.out.printf("%-10s%s\n","2." ," Add Product");
-          System.out.printf("%-10s%s\n","3." ," Edit Product");
+          System.out.printf("%-10s%s\n","3." ," Update Product");
           System.out.printf("%-10s%s\n","4." ," Delete Product");
           System.out.printf("%-10s%s\n","5." ," Exit");
           System.out.println("====================================");
@@ -65,8 +65,9 @@ public class Crud{
   
 }
 //#endregion
+
 //#region editProduct
-public void editProduct(Product product){
+ public void editProduct(Product product){
  boolean isValid = true;
   Shoes  selectedProduct = (Shoes)product;
  System.out.println("You choose to edit " + selectedProduct.getName());
@@ -80,9 +81,11 @@ public void editProduct(Product product){
           System.out.printf( "%-8s%s\n" ,"4.", " Edit Material");
           System.out.printf( "%-8s%s\n" ,"5.", " Edit stock");
           System.out.printf( "%-8s%s\n" ,"6.", " Edit price");
-          System.out.printf( "%-8s%s\n" ,"7.", " Back To Menu");
+          System.out.printf( "%-8s%s\n" ,"7.", " Edit color");
+          System.out.printf( "%-8s%s\n" ,"8.", " Edit size");
+          System.out.printf( "%-8s%s\n" ,"9.", " Back To Menu");
           
-          System.out.print("\nChoose an option (1-7): ");
+          System.out.print("\nChoose an option (1-9): ");
 
           int choice = scanner.nextInt();
           scanner.nextLine();
@@ -251,7 +254,98 @@ public void editProduct(Product product){
                  } while (isValid == false);
                }
              //#endregion
+             //#region change color
              case 7
+             ->{
+              String[] productColor =  selectedProduct.getColor();
+  
+               int row = 0;
+               int column = 0;
+
+              do{
+                
+                inventory.chooseSize_colorInterface(scanner , selectedProduct);
+                 row = inventory.chooseColor(scanner, selectedProduct);
+               
+
+              }while(!isValid);
+
+              inventory.disSelectedColor( row,selectedProduct);
+              String oldColor = productColor[row];
+              String newColor ;
+              do { 
+                  scanner.nextLine();
+                  System.out.print("\nEnter new color: ");
+                  newColor = scanner.nextLine();
+                  isValid =  isValidString(newColor);
+
+             
+              } while (!isValid);
+          
+              selectedProduct.setColor(row,newColor);
+              System.out.println(oldColor + " changed to " + productColor[row]);
+              
+
+              inventory.disSelectedColor( row,selectedProduct);
+           
+              editProduct(selectedProduct);
+             }
+             //#endregion
+
+             //#region change size
+             case 8
+             ->{
+              String[] productColor =  selectedProduct.getColor();
+              double[][]productSize = selectedProduct.getSize();
+
+               int[][] productStock = selectedProduct.getStock();
+               int row = 0;
+               int column = 0;
+
+              do{
+                
+                inventory.chooseSize_colorInterface(scanner , selectedProduct);
+                 row = inventory.chooseColor(scanner, selectedProduct);
+                 column = inventory. chooseSize(scanner, selectedProduct, row);
+
+                //validate if the row and column exist   
+                isValid = (column >= 0 && column < productStock[row].length);
+                //exception(int[] selection, int choice,Scanner scanner)
+                String feedback = isValid? "" : "Column and row doesnt exist, choose again!";
+                System.out.println(feedback);
+               
+
+              }while(!isValid);
+
+          
+              inventory.disSelectedColor( row, column,selectedProduct);
+              double oldSize=  productSize[row][column];
+              double newSize  = 0;
+              do { 
+                try {
+                  System.out.print("\nEnter new size: ");
+                  newSize = scanner.nextDouble();
+                  isValid =  (newSize > 0);
+                  String feedback = isValid? "Stock quantity changed succesfully" : "Size  must be more than 0";
+                  System.out.println(feedback);
+                } catch (InputMismatchException e) {
+                  System.out.println("Input invalid,must be number!");
+                  isValid = false;
+                  scanner.nextLine();
+                }
+             
+              } while (!isValid);
+          
+              selectedProduct.setSize(row,column,newSize);
+              System.out.println(oldSize + " changed to " + productSize[row][column]);
+              
+
+              inventory.disSelectedColor( row, column,selectedProduct);
+           
+              editProduct(selectedProduct);
+             }
+
+             case 9
               ->{
                  System.out.println("Back to menu......"); 
                  return;
@@ -277,6 +371,7 @@ public void editProduct(Product product){
  
 }
 //#endregion
+
 //#region deleteProduct
 public void deleteProduct(){
   boolean isValid = true;

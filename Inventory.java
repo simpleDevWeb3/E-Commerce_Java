@@ -692,6 +692,29 @@ public void disSelectedColor(int row , int column ,Shoes selectedProduct){
 
 //#endregion 
 
+
+public void disSelectedColor(int row , Shoes selectedProduct){
+    String[] productColor =  selectedProduct.getColor();
+    int[][] productStock = selectedProduct.getStock();
+    double[][]productSize = selectedProduct.getSize();
+    
+
+    System.out.printf("%-7s %-15s %s", "No.", "Color" , "Size");
+
+    System.out.println("\n-------------------------------------------------");
+    
+      System.out.printf("r%-7d%-12s ",row, productColor[row]);
+      for(int j = 0 ; j < productSize[row].length ; j++){
+        System.out.printf("  %.1f(%d)  ",productSize[row][j], productStock[row][j]);
+      }
+        
+       
+        System.out.print("\n");
+  
+    System.out.println("-------------------------------------------------");
+}
+
+
 public String selectMaterial(Scanner scanner){
     boolean isValid;
    

@@ -3,10 +3,8 @@ public class Main {
   public static void main(String []args){
   
    //Inventory i = new Inventory();
-
   Crud c = new Crud();
    
-
    //i.displayCategories();/*<=display main category exist in inventory */
 
    //i.displayProducts(); /*<= display all product exist in inventory*/
@@ -24,7 +22,7 @@ public class Main {
       System.out.println(product.getProductCount());
   }
   //System.out.println("DEBUG: Actual products array length: " + i.getProducts().length);
-System.out.println("DEBUG: Stored product count: " + Product.getProductCount());
+ System.out.println("DEBUG: Stored product count: " + Product.getProductCount());
   //i.disProductList();*/
  
   

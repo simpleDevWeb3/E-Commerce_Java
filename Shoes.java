@@ -63,13 +63,13 @@ public void setBrand(String brand) {
     stock[row][column] = newQuantity;
 }
 
-  public void setSize(double[][] size) {
+  public void setSize(int row ,int column, double newSize) {
    
-    this.size = size;
+    size[row][column] = newSize;
   }
 
-  public void setColor(String[] color) {
-    this.color = color;
+  public void setColor(int row,String newColor) {
+   color[row] = newColor;
 
   }
 
