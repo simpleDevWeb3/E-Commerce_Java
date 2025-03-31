@@ -524,6 +524,100 @@ public Category selectCategory(Scanner scanner){
    return  selectCategory(scanner);
 }
 
+//#region color and size
+//#region print out available color and size
+public void chooseSize_colorInterface(Scanner scanner , Shoes selectedProduct){
+    boolean isValid;
+    int maxColumns = 0;
+    String[] productColor =  selectedProduct.getColor();
+    int[][] productStock = selectedProduct.getStock();
+    double[][]productSize = selectedProduct.getSize();
+    
+   int column = 0;   
+   int row = 0;
+
+   System.out.println("\nAvailble Colors & Sizes:");
+    
+   System.out.printf("%-7s %-15s", "No.", "Color");
+  
+      //find max column
+      for (double[] sizeRow : productSize) {
+        if (sizeRow.length > maxColumns) {
+            maxColumns = sizeRow.length;
+        }
+    }
+    //display column
+    for(int i = 0;  i < maxColumns ; i++ ){
+      System.out.printf("c%-7d  " , i+1);
+    }
+
+  System.out.println("\n-------------------------------------------------");
+  
+    for(int i = 0; i < productColor.length; i ++){
+    
+      System.out.printf("r%-7d%-12s ",i+1, productColor[i]);
+    
+      for(int j = 0 ; j < productSize[i].length; j++){
+        System.out.printf("  %.1f(%d)  ",productSize[i][j], productStock[i][j]);
+      }
+      System.out.print("\n");
+    }
+    System.out.println("-------------------------------------------------");
+
+   
+
+}
+//#endregion
+
+//#region chooseColor return row
+public int chooseColor(Scanner scanner , Shoes selectedProduct){
+    String[] productColor =  selectedProduct.getColor();
+    int row = 0; 
+    boolean isValid;
+
+    do { 
+        System.out.printf("choose row(1-%d): ",productColor.length);
+        row = scanner.nextInt()-1;
+        isValid = (row>=0&&row<productColor.length);
+        String feedback = isValid ? "" : "choose row beetween (1-" + productColor.length +")";
+        System.out.println(feedback);
+      } while (!isValid);
+
+    return row;
+} 
+//#endregion
+
+//#region chooseSize return the column
+public int chooseSize (Scanner scanner , Shoes selectedProduct , int row){
+    String[] productColor =  selectedProduct.getColor();
+    int column = 0; 
+    boolean isValid;
+    int maxColumns = 0;
+    double[][]productSize = selectedProduct.getSize();
+
+    //find max column
+    for (double[] sizeRow : productSize) {
+        if (sizeRow.length > maxColumns) {
+            maxColumns = sizeRow.length;
+        }
+    }
+   
+    do { 
+        System.out.printf("choose column(1-%d): ",maxColumns);
+       column = scanner.nextInt()-1;     
+        isValid = (column>=0&&column<maxColumns);  
+        String feedback = isValid ? "" : "choose column beetween (1-" + maxColumns +")";
+        System.out.println(feedback);
+                               
+    } while (!isValid); 
+    
+    return column;
+
+}
+//#endregion
+
+//#endregion 
+
 public String selectMaterial(Scanner scanner){
     boolean isValid = true;
    
