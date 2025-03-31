@@ -58,9 +58,10 @@ public void setBrand(String brand) {
     this.brand = brand;
   }
 
-  public void setStock(int[][] stock) {
-    this.stock = stock;
-  }
+  public void setStock(int row, int column, int newQuantity) {
+    
+    stock[row][column] = newQuantity;
+}
 
   public void setSize(double[][] size) {
    

@@ -469,9 +469,45 @@ public Product chooseProduct(Product[] products, Scanner scanner) {
         return products;
  }
 
- public void deleteProduct(String productId) {
+ public void deleteProduct(String productId,Scanner scanner,Product s) {
     int productCount = Product.getProductCount();
     int newIndex = 0;
+    Shoes selectedProduct = (Shoes)s;
+    boolean isValid;
+    do {
+            try {
+                System.out.println("------------------------------------------------------");
+                System.out.printf("%-25s%-15s%-4s\n", "Name", "Price(RM)","Stock");
+                System.out.println("------------------------------------------------------");
+                
+                        System.out.printf("%-25s%-15.2f%d\n",
+                 
+                                selectedProduct.getName(),
+                                selectedProduct.getPrice(),
+                                selectedProduct.getTotalStock() // Using Shoes method
+                        );
+               System.out.println("------------------------------------------------------");  
+                System.out.print("\nAre you sure to delete this product?(y/n): ");
+                char confirm = scanner.next().toLowerCase().charAt(0);
+            
+                if (confirm == 'n') {
+                    System.out.println("Deletion canceled.");
+                    return;
+                }else if(confirm == 'y'){
+                    isValid = true;
+                }else{
+                    System.out.println("Input invalid, it must be character (y/n)");
+                    isValid = false;
+                }
+
+            } catch (Exception e) {
+                System.out.println("Input invalid, it must be character (y/n)");
+                scanner.nextLine();
+                isValid = false;
+            }
+        
+    } while (!isValid);
+   
 
     // Create a new array with the correct size
     Product[] newProducts = new Product[productCount - 1];
@@ -576,11 +612,18 @@ public int chooseColor(Scanner scanner , Shoes selectedProduct){
     boolean isValid;
 
     do { 
-        System.out.printf("choose row(1-%d): ",productColor.length);
-        row = scanner.nextInt()-1;
-        isValid = (row>=0&&row<productColor.length);
-        String feedback = isValid ? "" : "choose row beetween (1-" + productColor.length +")";
-        System.out.println(feedback);
+        try {
+            System.out.printf("choose row(1-%d): ",productColor.length);
+            row = scanner.nextInt()-1;
+            isValid = (row>=0&&row<productColor.length);
+            String feedback = isValid ? "" : "choose row beetween (1-" + productColor.length +")";
+            System.out.println(feedback);
+        } catch (InputMismatchException e) {
+            System.out.println("Input invalid,Must be number!");
+            scanner.nextLine();
+            isValid = false;
+        }
+     
       } while (!isValid);
 
     return row;
@@ -589,7 +632,6 @@ public int chooseColor(Scanner scanner , Shoes selectedProduct){
 
 //#region chooseSize return the column
 public int chooseSize (Scanner scanner , Shoes selectedProduct , int row){
-    String[] productColor =  selectedProduct.getColor();
     int column = 0; 
     boolean isValid;
     int maxColumns = 0;
@@ -603,11 +645,18 @@ public int chooseSize (Scanner scanner , Shoes selectedProduct , int row){
     }
    
     do { 
-        System.out.printf("choose column(1-%d): ",maxColumns);
-       column = scanner.nextInt()-1;     
-        isValid = (column>=0&&column<maxColumns);  
-        String feedback = isValid ? "" : "choose column beetween (1-" + maxColumns +")";
-        System.out.println(feedback);
+        try {
+            System.out.printf("choose column(1-%d): ",maxColumns);
+            column = scanner.nextInt()-1;     
+             isValid = (column>=0&&column<maxColumns);  
+             String feedback = isValid ? "" : "choose column beetween (1-" + maxColumns +")";
+             System.out.println(feedback);
+        } catch (InputMismatchException e) {
+            System.out.println("Input invalid, must be number!");
+            isValid = false;
+            scanner.nextLine();
+        }
+
                                
     } while (!isValid); 
     
@@ -616,10 +665,35 @@ public int chooseSize (Scanner scanner , Shoes selectedProduct , int row){
 }
 //#endregion
 
+public void disSelectedColor(int row , int column ,Shoes selectedProduct){
+    String[] productColor =  selectedProduct.getColor();
+    int[][] productStock = selectedProduct.getStock();
+    double[][]productSize = selectedProduct.getSize();
+
+
+    System.out.printf("%-7s %-15s c%d", "No.", "Color" , column+1);
+       int maxColumns = 0;
+      //display column
+      for(int i = 0;  i < maxColumns ; i++ ){
+        System.out.printf("c%-7d  " , i+1);
+      }
+
+    System.out.println("\n-------------------------------------------------");
+    
+        System.out.printf("r%-7d%-12s ",row, productColor[row]);
+      
+  
+         System.out.printf("  %.1f(%d)  ",productSize[row][column], productStock[row][column]);
+       
+        System.out.print("\n");
+  
+    System.out.println("-------------------------------------------------");
+}
+
 //#endregion 
 
 public String selectMaterial(Scanner scanner){
-    boolean isValid = true;
+    boolean isValid;
    
     do { 
         try {

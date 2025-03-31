@@ -173,9 +173,11 @@ public void editProduct(Product product){
             ->{
               String[] productColor =  selectedProduct.getColor();
               double[][]productSize = selectedProduct.getSize();
+
                int[][] productStock = selectedProduct.getStock();
                int row = 0;
                int column = 0;
+
               do{
                 
                 inventory.chooseSize_colorInterface(scanner , selectedProduct);
@@ -184,14 +186,39 @@ public void editProduct(Product product){
 
                 //validate if the row and column exist   
                 isValid = (column >= 0 && column < productStock[row].length);
+                //exception(int[] selection, int choice,Scanner scanner)
                 String feedback = isValid? "" : "Column and row doesnt exist, choose again!";
                 System.out.println(feedback);
-             
+               
 
               }while(!isValid);
 
           
-              System.out.printf("You choosed color: %s  size: %.1f stock: %d",productColor[row],productSize[row][column],productStock[row][column]);
+              inventory.disSelectedColor( row, column,selectedProduct);
+              int oldStock = productStock[row][column];
+              int newQuantity  = 0;
+              do { 
+                try {
+                  System.out.print("\nEnter new quantity: ");
+                  newQuantity = scanner.nextInt();
+                  isValid =  (newQuantity > 0);
+                  String feedback = isValid? "Stock quantity changed succesfully" : "Stock quantity must more than 0";
+                  System.out.println(feedback);
+                } catch (InputMismatchException e) {
+                  System.out.println("Input invalid,must be number!");
+                  isValid = false;
+                  scanner.nextLine();
+                }
+             
+              } while (!isValid);
+          
+              selectedProduct.setStock(row,column,newQuantity);
+              System.out.println(oldStock + " changed to " + productStock[row][column]);
+              
+
+              inventory.disSelectedColor( row, column,selectedProduct);
+           
+              editProduct(selectedProduct);
             }
             //#endregion
            //#region update price
@@ -261,7 +288,7 @@ public void deleteProduct(){
       String productId = selectedProduct.getId();
       isValid = (selectedProduct!= null) ? true : false;
       if(isValid){
-        inventory.deleteProduct(productId);
+        inventory.deleteProduct(productId,scanner, selectedProduct);
       }
     
       System.out.println("=================================");
@@ -270,7 +297,7 @@ public void deleteProduct(){
       System.out.println(" Invalid input! Please enter a number.");
       scanner.nextLine();
       deleteProduct();
-    };
+    }
   
   }
   
@@ -666,4 +693,7 @@ public static boolean isDuplicate(double input, double[] arr, int size) {
 }
 
 //#endregion
+
+
+
 }
