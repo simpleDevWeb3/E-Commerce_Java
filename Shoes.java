@@ -127,6 +127,7 @@ public static void displaySize(){
 
   System.out.println("___________________");
 }
+
 public static void displayMaterials(){
 
   System.out.println("-------------------");

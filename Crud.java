@@ -40,7 +40,8 @@ public class Crud{
 
                       
             case 3 ->{            
-                        Product selectedProduct =  inventory.filter(scanner);               
+                        Product selectedProduct =  inventory.filter(scanner); 
+                          
                         editProduct(selectedProduct);
                     }
             case 4 ->{System.out.println( "Delete Product....");

@@ -4,7 +4,7 @@ private static int prodCount = 1;
 
   public static String generateProductId(String prefix) {
    String id = "Prod_" + prefix.replace(" ", "") + prodCount;
-   prodCount++;
+    prodCount++;
     return  id;
 }
 

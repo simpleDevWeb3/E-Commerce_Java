@@ -277,9 +277,9 @@ public void disProductData(Product [] subCatProduct){
 
 //#region addProduct
  public void addProduct(Product newProduct){
-     //expand array
+     //expand array          
      products = Arrays.copyOf(products,products.length + 1 );
-     
+    
      //asign new subcat to last index
      products[products.length - 1] = newProduct;
  }
@@ -400,6 +400,7 @@ public Product displayProductByCat(Scanner scanner) {
 //#endregion
  
 //#region chooseProduct param: Product[] products, Scanner scanner -> accept user input for choosing product return product object
+
 public Product chooseProduct(Product[] products, Scanner scanner) {
     while (true) { // Keep looping until a valid choice is made
         System.out.print("Choose Product (1 - " + products.length + "): ");
