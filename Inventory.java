@@ -504,7 +504,7 @@ public Category selectCategory(Scanner scanner){
             System.out.printf("Choose main category (1-%d)" , categories.length);
             int choice = scanner.nextInt();
             
-            if(choice > 0 && choice < categories.length){
+            if(choice >= 0 && choice <= categories.length){
                 Category selectedCategory = categories[choice-1];
                 return selectedCategory;
             }else{

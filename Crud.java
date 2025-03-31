@@ -168,7 +168,77 @@ public void editProduct(Product product){
                System.out.printf("%s changed to %s\n" , oldMaterial,selectedMaterial);
                editProduct(selectedProduct);
             }
-     
+            
+            case 5
+            ->{
+                int maxColumns = 0;
+                String[] productColor =  selectedProduct.getColor();
+                int[][] productStock = selectedProduct.getStock();
+                double[][]productSize = selectedProduct.getSize();
+                
+               int column = 0;   
+               int row = 0;
+
+               do{
+                System.out.println("\nAvailble Colors & Sizes:");
+                
+                 System.out.printf("%-7s %-15s", "No.", "Color");
+                
+                    //find max column
+                    for (double[] sizeRow : productSize) {
+                      if (sizeRow.length > maxColumns) {
+                          maxColumns = sizeRow.length;
+                      }
+                  }
+                  //display column
+                  for(int i = 0;  i < maxColumns ; i++ ){
+                    System.out.printf("c%-7d  " , i+1);
+                  }
+                  
+                System.out.println("\n-------------------------------------------------");
+                
+                  for(int i = 0; i < productColor.length; i ++){
+                  
+                    System.out.printf("r%-7d%-12s ",i+1, productColor[i]);
+                  
+                    for(int j = 0 ; j < productSize[i].length; j++){
+                      System.out.printf("  %.1f(%d)  ",productSize[i][j], productStock[i][j]);
+                    }
+                    System.out.print("\n");
+                  }
+                  System.out.println("-------------------------------------------------");
+               //validate row  column
+               // validate row  is valid in range
+                do { 
+                  System.out.printf("choose row(1-%d): ",productColor.length);
+                  row = scanner.nextInt()-1;
+                  isValid = (row>=0&&row<productColor.length);
+                  String feedback = isValid ? "" : "choose row beetween (1-" + productColor.length +")";
+                  System.out.println(feedback);
+                } while (!isValid);
+               
+              
+               // validate column  is valid in range
+                do { 
+                  System.out.printf("choose column(1-%d): ",maxColumns);
+                 column = scanner.nextInt()-1;     
+                  isValid = (column>=0&&column<maxColumns);  
+                  String feedback = isValid ? "" : "choose column beetween (1-" + maxColumns +")";
+                  System.out.println(feedback);
+                                         
+                } while (!isValid);   
+
+                //validate if the row and column exist   
+                isValid = (column >= 0 && column < productStock[row].length);
+                String feedback = isValid? "" : "Column and row doesnt exist, choose again!";
+                System.out.println(feedback);
+              }while(!isValid);
+
+                System.out.printf("You choosed color: %s  size: %.1f stock: %d",productColor[row],productSize[row][column],productStock[row][column]);
+
+          
+             
+            }
            //#region update price
             case 6
                ->{
@@ -202,7 +272,7 @@ public void editProduct(Product product){
              case 7
               ->{
                  System.out.println("Back to menu......"); 
-                 displayMenu();
+                 return;
                }
      
              default 
