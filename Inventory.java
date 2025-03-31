@@ -80,10 +80,12 @@ public void displayCategories() {
         int i = 1;
         for (Category category : categories) {
            
-            
+            if(category.getPCategory() == null){
                 System.out.printf("%-5d %s%n",i, category.getName());
                 i++;
            
+            }
+               
               
         }
         System.out.println("===================================");
@@ -284,6 +286,17 @@ public void disProductData(Product [] subCatProduct){
      products[products.length - 1] = newProduct;
  }
 //#endregion addProduct
+
+//#region addProduct
+public void addCategory(Category newCategory){
+    //expand array          
+    categories = Arrays.copyOf(categories,categories.length + 1 );
+   
+    //asign new subcat to last index
+    categories[categories.length - 1] = newCategory;
+}
+//#endregion addProduct
+
 
 
 //#region getSubCatList return Category[]subCat

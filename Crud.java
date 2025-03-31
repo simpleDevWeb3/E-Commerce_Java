@@ -746,13 +746,27 @@ char choice;
 }
 //#endregion
 //#region addCategory
-public void addCategory(){
+public void addCategory() {
   System.out.println("\n========= Adding category =========");
-  System.out.println("  Enter category name: " );
-  System.out.println("  Enter number of subcategory: " );
-  System.out.println("  Enter subcategory name: ");
-  System.out.println("=================================");
+  System.out.print("  Enter category name: ");
+  String cName = scanner.nextLine();
   
+  System.out.print("  Enter number of subcategories: ");
+  int numSCat = scanner.nextInt();
+  scanner.nextLine(); // Consume the leftover newline
+
+  Category newCategory = new Category(cName, null);
+  inventory.addCategory(newCategory);
+
+  for (int i = 0; i < numSCat; i++) {
+      System.out.print("  Enter subcategory name: ");
+      String sName = scanner.nextLine();
+      
+      Category newSCategory = new Category(sName, newCategory);
+      inventory.addCategory(newSCategory); // Corrected to add the subcategory
+  }
+
+  System.out.println("=================================");
 }
 
 //#endregion
