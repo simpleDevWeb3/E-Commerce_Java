@@ -379,9 +379,9 @@ public void deleteProduct(){
     try {
 
       System.out.println("\n=========Delete product =========");
-      Product selectedProduct =inventory.chooseProduct(inventory.getProducts(), scanner);
+      Product selectedProduct =inventory.chooseProduct(Inventory.getProducts(), scanner);
       String productId = selectedProduct.getId();
-      isValid = (selectedProduct!= null) ? true : false;
+      isValid = (selectedProduct!= null);
       if(isValid){
         inventory.deleteProduct(productId,scanner, selectedProduct);
       }
@@ -423,7 +423,7 @@ do {
     Shoes.displayMaterials();
     System.out.print("Select Materials: ");
     int choice = scanner.nextInt()-1;
-    isValid = (choice >= 0 && choice < Shoes.AVAILABLE_MATERIALS.length) ? true : false;
+    isValid = (choice >= 0 && choice < Shoes.AVAILABLE_MATERIALS.length);
     material = isValid ?  Shoes.AVAILABLE_MATERIALS[choice] : null;
     String feedback = isValid ? "  Material:  " + Shoes.AVAILABLE_MATERIALS[choice] : "Choose between 1-" + Shoes.AVAILABLE_MATERIALS.length;
     System.out.println(feedback);
@@ -520,7 +520,7 @@ int numOfColor = 0;
       System.out.print("Enter number of color: ");
       numOfColor =  scanner.nextInt();
       scanner.nextLine();
-      isValid = (numOfColor >= 1 && numOfColor <= 5) ? true : false;
+      isValid = (numOfColor >= 1 && numOfColor <= 5);
   
       //giving feedback
       String feedback = isValid ? "Product have " + numOfColor +" color..": "Product must have atleast one color and contain  atless  less than 6 colors";
@@ -553,7 +553,7 @@ int numOfColor = 0;
           int choice = scanner.nextInt() - 1;
           scanner.nextLine();
   
-          isValid = (choice >= 0 && choice < Shoes.AVAILABLE_COLORS.length) ? true : false;
+          isValid = (choice >= 0 && choice < Shoes.AVAILABLE_COLORS.length);
   
           
           if (!isValid) {
@@ -641,7 +641,7 @@ int numOfColor = 0;
 
               int choice = scanner.nextInt()-1;
               scanner.nextLine();
-              isValid = (choice>= 0 && choice < Shoes.AVAILABLE_SIZES_CM.length) ? true : false;
+              isValid = (choice>= 0 && choice < Shoes.AVAILABLE_SIZES_CM.length);
         
               
               if (isValid) {
@@ -687,7 +687,7 @@ int numOfColor = 0;
         try {
           System.out.printf("Enter stock for (Size %s): ",eachSize[i][j]);
           stock[i][j] = scanner.nextInt();
-          isValid = (stock[i][j] >= 0  && stock[i][j] < 9999)? true  : false;
+          isValid = (stock[i][j] >= 0  && stock[i][j] < 9999);
 
           if(isValid){
             stock[i][j] = stock[i][j];
@@ -747,13 +747,63 @@ char choice;
 //#endregion
 //#region addCategory
 public void addCategory() {
-  System.out.println("\n========= Adding category =========");
-  System.out.print("  Enter category name: ");
-  String cName = scanner.nextLine();
+  Category[] catArr= inventory. getCategories();
+  boolean isValid;
+  boolean isConfirm;
+  int size = catArr.length;
+  String [] arrName = new String [size];
+  String cName;
   
-  System.out.print("  Enter number of subcategories: ");
-  int numSCat = scanner.nextInt();
-  scanner.nextLine(); // Consume the leftover newline
+  for(int i = 0 ; i <size ; i++){
+    arrName[i] = catArr[i].getName();
+  }
+
+  do {
+    System.out.println("\n========= Adding category =========");
+    System.out.print("Enter category name: ");
+    cName = scanner.nextLine();
+  
+    do { 
+      System.out.print("Are you confirm to add new Category->" + cName + "(y/n): ");
+      char confirm = Character.toLowerCase(scanner.nextLine().charAt(0));
+      isConfirm  = confirm == 'y';
+       isValid  = confirm == 'y' || confirm =='n';
+       String feedback = isValid ? "" :  "choose beetween y or n";
+       System.out.println(feedback);
+    } while (!isValid);
+   
+    isValid = !isDuplicate(cName,arrName,size) ;
+    String feedback =  isValid ? " ": " " + cName + " Already exist try different name!";
+    System.out.println(feedback);
+  } while (!isValid || !isConfirm);
+  
+
+  int numSCat = 0;
+  do {
+
+    try {
+      System.out.printf("Enter number of subcategories for %s: ",cName);
+      numSCat = scanner.nextInt();
+      scanner.nextLine(); 
+      System.out.print("Are you confirm to add "  + numSCat + " subcategory for " +cName + "(y/n): ");
+      char confirm = Character.toLowerCase(scanner.nextLine().charAt(0));
+
+      isConfirm  = confirm == 'y';
+
+      isValid  = confirm == 'y' || confirm =='n';
+
+      String feedback = isValid ? "" :  "choose beetween y or n";
+      System.out.println(feedback);
+
+    } catch (InputMismatchException e) {
+      System.out.println("Input invalid must be number");
+      scanner.nextLine();
+      isValid = false;
+    }
+
+    
+  } while (!isValid || !isConfirm);
+
 
   Category newCategory = new Category(cName, null);
   inventory.addCategory(newCategory);
@@ -763,7 +813,7 @@ public void addCategory() {
       String sName = scanner.nextLine();
       
       Category newSCategory = new Category(sName, newCategory);
-      newCategory.addSubcategory(newSCategory); // Corrected to add the subcategory
+      newCategory.addSubcategory(newSCategory); 
   }
 
   System.out.println("=================================");
@@ -780,16 +830,22 @@ public static boolean isValidString(String input) {
 
 //validate string only
 public static boolean isDuplicate(String input, String[] arr, int size) {
-  for (int i = 0; i < size; i++) {
+      // Normalize input: Convert to lowercase and remove all spaces
+      String normalizedInput = input.toLowerCase().replaceAll("\\s+", "");
 
-      if (arr[i].equalsIgnoreCase(input)) {
-          return true; // Duplicate found
+      for (int i = 0; i < size; i++) {
+          // Normalize array elements: Convert to lowercase and remove all spaces
+          String normalizedArrayElement = arr[i].toLowerCase().replaceAll("\\s+", "");
+          
+          if (normalizedArrayElement.equals(normalizedInput)) {
+              return true; // Duplicate found
+          }
       }
-  }
-  return false; // No duplicate found
+      return false; // No duplicate found
+  
 }
 
-
+//validate duplicate intiger
 public static boolean isDuplicate(double input, double[] arr, int size) {
   for (int i = 0; i < size; i++) {
 

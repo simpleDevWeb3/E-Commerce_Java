@@ -208,13 +208,13 @@ public void displaySCategories(Category[] subCat){
 public void disProductData(){
     if(Product.getProductCount()>0){
         int i = 1;
-        System.out.println("------------------------------------------------------");
-        System.out.printf("%-4s\t%-25s%-15s%-4s\n", "No.", "Name", "Price(RM)","Stock");
-        System.out.println("------------------------------------------------------");
+        System.out.println("-------------------------------------------------------------");
+        System.out.printf("%-4s\t%-25s\t%-15s%-4s\n", "No.", "Name", "Price(RM)","Stock");
+        System.out.println("-------------------------------------------------------------");
         for(Product p : products){
             if (p instanceof Shoes) {
                 Shoes shoe = (Shoes) p; // Downcasting to Shoes
-                System.out.printf("%d.)\t%-25s%-15.2f%d\n",
+                System.out.printf("%d.)\t%-25s\t%-15.2f%d\n",
                         i++,
                         shoe.getName(),
                         shoe.getPrice(),
@@ -230,7 +230,7 @@ public void disProductData(){
                 );
             }
         }
-        System.out.println("------------------------------------------------------");
+        System.out.println("------------------------------------------------------------");
     }else{
         System.out.println("Product not available");
     }
