@@ -8,7 +8,8 @@ public class Product{
   private double price;
   private int quantity;
   private static int productCount;
-  Category category;
+  private Category category;
+ // private String categoryId;
  
  
   public Product(){
@@ -17,12 +18,14 @@ public class Product{
 
   public Product(String pName, double price, int quantity,Category category){
     productCount++;
-    System.out.println("DEBUG: Product created. Current count: " + productCount);
+   // System.out.println("DEBUG: Product created. Current count: " + productCount);
       this.id = IdGenerator.generateProductId(category.getName());
       this.pName = pName;
       this.price = price;
       this.quantity = quantity;
       this.category = category;
+      //this.categoryId  = category.getId();
+      
       
   }
 

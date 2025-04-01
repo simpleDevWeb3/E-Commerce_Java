@@ -19,9 +19,11 @@ public class Crud{
           System.out.println("\n========= Inventory System =========");
           System.out.printf("%-10s%s\n","1." ," Add Categories");
           System.out.printf("%-10s%s\n","2." ," Add Product");
-          System.out.printf("%-10s%s\n","3." ," Update Product");
+          System.out.printf("%-10s%s\n","3." ," Edit Product");
           System.out.printf("%-10s%s\n","4." ," Delete Product");
-          System.out.printf("%-10s%s\n","5." ," Exit");
+          System.out.printf("%-10s%s\n","5." ," Edit Categories");
+          System.out.printf("%-10s%s\n","6." ," Delete Categories");
+          System.out.printf("%-10s%s\n","7." ," Exit");
           System.out.println("====================================");
           System.out.print("Choose an option: ");
 
@@ -30,12 +32,19 @@ public class Crud{
 
           switch(choice){
             case 1 ->{
+
                        System.out.println( "Add category");
+
                        addCategory();
+
                      }
+
             case 2 ->{
+
                       System.out.println( "Add product");
+
                       addProduct();
+
                      }
 
                       
@@ -43,16 +52,40 @@ public class Crud{
                         Product selectedProduct =  inventory.filter(scanner); 
                           
                         editProduct(selectedProduct);
-                    }
-            case 4 ->{System.out.println( "Delete Product....");
+                     }
+
+            case 4 ->{
+                       System.out.println( "Delete Product....");
 
                         inventory.disProductData();
                               
                         deleteProduct();  
                      }
-            case 5 ->{System.out.println( "Exiting....");
-                      return;}           
-            default ->System.out.println("Not a choice");
+
+            case 5 -> {
+                        System.out.println( "Edit Category....");
+                        Category selectedCategory = inventory.selectCategory(scanner);
+                      
+                        editCategory(selectedCategory, inventory.getCategories());
+                      }
+
+            case 6 -> {
+
+                        System.out.println( "Delete Category....");
+
+                        deleteCategory();
+
+                      }
+
+            case 7 ->{
+
+                      System.out.println( "Exiting....");
+
+                      return;
+
+                     }     
+
+            default -> System.out.println("Not a choice");
                       
           } 
       }while(true);
@@ -747,54 +780,82 @@ char choice;
 //#endregion
 //#region addCategory
 public void addCategory() {
-  Category[] catArr= inventory. getCategories();
-  boolean isValid;
+  //validation
+  Category[] catArr= inventory. getCategories();// meow meow array bruh i mean category
+  boolean isValid;   
   boolean isConfirm;
+  boolean isDuplicate;
+  boolean isNeg;
   int size = catArr.length;
   String [] arrName = new String [size];
+  String feedback;
+  char confirm;
+ // validation
+
   String cName;
   
+  //get the available catName
   for(int i = 0 ; i <size ; i++){
     arrName[i] = catArr[i].getName();
   }
-
+  //#region enter main category
   do {
     System.out.println("\n========= Adding category =========");
     System.out.print("Enter category name: ");
     cName = scanner.nextLine();
-  
+   
+    //confirmation on category name
     do { 
       System.out.print("Are you confirm to add new Category->" + cName + "(y/n): ");
-      char confirm = Character.toLowerCase(scanner.nextLine().charAt(0));
+       confirm = Character.toLowerCase(scanner.nextLine().charAt(0));
       isConfirm  = confirm == 'y';
        isValid  = confirm == 'y' || confirm =='n';
-       String feedback = isValid ? "" :  "choose beetween y or n";
+       feedback = isValid ? "" :  "choose beetween y or n";
        System.out.println(feedback);
     } while (!isValid);
    
-    isValid = !isDuplicate(cName,arrName,size) ;
-    String feedback =  isValid ? " ": " " + cName + " Already exist try different name!";
+   // validation 
     System.out.println(feedback);
-  } while (!isValid || !isConfirm);
+    isValid =  isValidString(cName);// checking if user enter backsapce 
+    feedback = isValid ?  " ": "Invalid input!Input must be words or Input is empty Please enter again!";
+    System.out.println(feedback);
+    isDuplicate = isDuplicate(cName,arrName,size) ;
+    feedback =  !isDuplicate ? " ": " " + cName + " Already exist try different name!";
+    System.out.println(feedback);
+    
+  } while (!isValid || !isConfirm ||isDuplicate);
   
+//#endregion
 
+//#region enter  number of subcategory for the cat ~~~ 
   int numSCat = 0;
   do {
 
     try {
-      System.out.printf("Enter number of subcategories for %s: ",cName);
-      numSCat = scanner.nextInt();
-      scanner.nextLine(); 
-      System.out.print("Are you confirm to add "  + numSCat + " subcategory for " +cName + "(y/n): ");
-      char confirm = Character.toLowerCase(scanner.nextLine().charAt(0));
+      //#region validation for number preven user enter negative or value
+      do {
+        System.out.printf("Enter number of subcategories for %s: ",cName);
+        numSCat = scanner.nextInt();
+        isNeg = numSCat < 0 ;
+        feedback = isNeg ? "Must be positive number" : " ";
+        System.out.println(feedback);         
+      } while (isNeg);
+      //#endregion
+      scanner.nextLine();
+     //#region confirmation
+      do {
+        System.out.print("Are you confirm to add "  + numSCat + " subcategory for " +cName + "(y/n): ");
+        confirm = Character.toLowerCase(scanner.nextLine().charAt(0));
 
-      isConfirm  = confirm == 'y';
-
-      isValid  = confirm == 'y' || confirm =='n';
-
-      String feedback = isValid ? "" :  "choose beetween y or n";
-      System.out.println(feedback);
-
+        isConfirm  = confirm == 'y';
+  
+        isValid  = confirm == 'y' || confirm =='n';
+  
+       feedback = isValid ? "" :  "choose beetween y or n";
+        System.out.println(feedback);
+  
+      } while (!isValid);
+     //#endregion
     } catch (InputMismatchException e) {
       System.out.println("Input invalid must be number");
       scanner.nextLine();
@@ -803,20 +864,69 @@ public void addCategory() {
 
     
   } while (!isValid || !isConfirm);
+//#endregion
 
-
+  //cat rest house
   Category newCategory = new Category(cName, null);
-  inventory.addCategory(newCategory);
-
+ 
+  // subCat name
+  String sName ;
+//#region enter subCategory name 
+ String []arrSName = new String[numSCat];  // place the put sCat name 
   for (int i = 0; i < numSCat; i++) {
-      System.out.print("  Enter subcategory name: ");
-      String sName = scanner.nextLine();
-      
+    //#region validation for valid input for sName
+    do {
+      System.out.print("Enter subcategory name: ");
+      sName = scanner.nextLine();
+      arrSName[i] = sName;  
+      isValid =  isValidString(sName);// checking if user enter backsapce 
+      isDuplicate = isDuplicate(sName, arrSName, i);// prevent duplicat same name subCat
+      feedback = isValid ?  " ": "Invalid input!Input must be words or Input is empty Please enter again!";
+      System.out.println(feedback);  
+      feedback = isDuplicate ? "Subcategory " + sName + " is already exist change ot other name instead!" : "";
+      System.out.println(feedback);  
+
+    } while (!isValid || isDuplicate);
+    //#endregion
+
+      //#region object created
       Category newSCategory = new Category(sName, newCategory);
       newCategory.addSubcategory(newSCategory); 
+      //#endregion
+  }
+//#endregion
+  System.out.println("=================================");
+  int i = 1;
+  System.out.printf("Main category: %s\n",newCategory.getName());
+  for (Category sCat : newCategory.getSCategories()) {
+     System.out.printf("%d.) %s\n",i,sCat.getName());
+       i ++;
   }
 
-  System.out.println("=================================");
+  do {
+    System.out.println("=================================");
+    System.out.print("Are you confirm to add this category(y/n): ");
+    confirm = Character.toLowerCase(scanner.nextLine().charAt(0));
+
+ 
+
+    isValid  = confirm == 'y' || confirm =='n';
+  
+   feedback = isValid ? "" :  "choose beetween y or n";
+  
+  } while (!isValid);
+
+  isConfirm  = confirm == 'y';
+  if(isConfirm){
+    inventory.addCategory(newCategory);
+    inventory.displayCategories();
+  }else{
+    System.out.println("Addition new cateogory is cancelled");
+  }
+ 
+  
+  System.out.println(feedback);
+
 }
 
 //#endregion
@@ -824,7 +934,7 @@ public void addCategory() {
 
 //#region inner validation method
 public static boolean isValidString(String input) {
-  return input.matches("[a-zA-Z ]+"); // Allows only letters and spaces
+  return input != null && input.trim().matches("^[a-zA-Z]+(\\s[a-zA-Z]+)*$");
 
 }
 
@@ -859,6 +969,233 @@ public static boolean isDuplicate(double input, double[] arr, int size) {
 
 //#endregion
 
+public void editCategory(Category category, Category[] arr){
+  Category[] catArr =  arr;
+  Category[] subCat = category.getSCategories();
+  int size = catArr.length;
+  String feedback;
+  boolean isDuplicate;
+  boolean isValid;
+  boolean isConfirm;
+  char confirm ;
+  System.out.println("\nYou choosed " + category.getName() + " what do you want to edit?\n");
+  System.out.println("==========================");
+  System.out.println("  Edit Category: " + category.getName());
+  System.out.println("==========================");
+  System.out.println("1. Add new subcategory"    );
+  System.out.println("2. delete  subcategory"    );
+  System.out.println("3. change subcategory name");
+  System.out.println("4. change category name"   );
+  System.out.println("5. Back to menu"   );
+  System.out.println("==========================");
 
+  System.out.print("Enter your choice(1-5): ");
+  int choice = scanner.nextInt();
+  scanner.nextLine();
+
+  switch(choice){
+    case 1 -> {
+            int numOfSCat = 0;
+            Category[] arrSCat = inventory.getSubCatList(category);
+            String[]  arrSCatName = new String [arrSCat.length];
+
+            for(int i = 0; i < arrSCat.length ; i++){
+              arrSCatName[i] = arrSCat[i].getName();
+              System.out.println(arrSCatName[i]);
+            }
+        
+
+             do {
+              try {
+                System.out.println("Add new subcategory in " + category.getName());
+
+                System.out.print("Enter number of subcategory in " + category.getName() + ": ");
+  
+                 numOfSCat  = scanner.nextInt();
+                
+                 isValid = numOfSCat > 0 ;
+                 feedback = isValid ?  " " : "Number must be more than 0";
+                 System.out.println(feedback);
+
+              } catch (InputMismatchException e) {
+
+                  System.out.println("Input invalid! must be number!");
+                  scanner.nextLine();
+                  isValid = false;
+
+              } 
+             
+             } while (!isValid);
+
+             
+                scanner.nextLine();
+                /* 
+                 // Create a new array with enough space for existing + new subcategories
+                 String[] updatedArrSCatName = new String[arrSCat.length + numOfSCat];
+
+                 // Copy existing subcategory names into the new array
+                 for (int i = 0; i < arrSCat.length; i++) {
+                     updatedArrSCatName[i] = arrSCat[i].getName();
+                 }*/
+
+               String sName;
+               Category newSCat = new Category();
+
+               for(int i = 0; i < numOfSCat ; i++){
+                do { 
+                  System.out.printf("%d.) Enter subcategory name: " , i);
+                  sName = scanner.nextLine();
+
+                  
+                  newSCat = new Category(sName,category);  
+                  isDuplicate =  isDuplicate(sName, arrSCatName, arrSCat.length);
+
+
+                  feedback = isDuplicate? sName + " already exist choose other name instead!" : " ";
+                  System.out.println(feedback);
+
+                } while (isDuplicate);     
+          
+               }
+              
+                                
+
+               for(int i = 0; i < numOfSCat ; i++){
+                 category.addSubcategory(newSCat);  
+               }
+
+
+             
+
+              
+
+              }
+
+    case 2 -> {
+                System.out.println("Delete subcategory");
+              }
+    
+     case 3 -> {
+               
+                System.out.println("Change subcategory to edit: ");
+                Category selectedSCat =inventory.chooseSubCat(choice, scanner, subCat);
+                    
+                Category[] sCatArr = inventory.getSubCatList(category);
+
+                String [] sCatNameArr = new String[sCatArr.length];
+
+                for (int i = 0; i < sCatArr.length ; i++) {
+                  sCatNameArr[i] =  sCatArr[i].getName();
+                }
+
+                String sName = selectedSCat.getName(); 
+                System.out.println("You choose " +sName+ " to edit");
+                String newSName;
+
+                do { 
+                  System.out.println("=============================");
+                  System.out.println("Change category name" );
+                  System.out.println("=============================");
+                  System.out.println("Current subcategory name : " + sName);
+                  System.out.print("Enter new subcategory: ");
+  
+                  newSName = scanner.nextLine();
+                  isDuplicate = isDuplicate(newSName, sCatNameArr, sCatArr.length);
+
+                  feedback = isDuplicate ?  newSName + " is already is exist, change other name exist" : " ";
+                  System.out.println(feedback); 
+
+                  isValid = isValidString(newSName);
+                  feedback = isValid ? "" : "Input must be word!";
+                  System.out.println(feedback);
+
+                } while (isDuplicate || !isValid);
+
+                do {
+
+                  System.out.print("Are you confirm to change to this  " + newSName + "(y/n): ");
+                  confirm = Character.toLowerCase(scanner.nextLine().charAt(0));
+                  
+                  isValid  = confirm == 'y' || confirm =='n';
+                  feedback = isValid ? "" :  "choose beetween y or n";
+                  System.out.println(feedback);
+                  
+                } while (!isValid);
+                
+                if(confirm == 'y'){
+                  System.out.println("You Changed " + sName + " to " + newSName + " succesfully!");
+                  selectedSCat.setName(newSName);
+                  inventory.displaySCategories(subCat);
+                }else{
+                  System.out.println("subcategory name change cancelled!");
+                }
+               
+                
+               }
+       
+     case 4 -> {
+                  String newCname;
+                  String oldCname = category.getName();
+                  
+                  String []arrCName = new String[size];
+                //get the arr of the name category
+                  for (int i = 0; i < size ; i++) {
+                    arrCName[i] = catArr[i].getName();
+                  }
+
+
+                  do { 
+                    System.out.println("=============================");
+                    System.out.println("Change category name" );
+                    System.out.println("=============================");
+                    System.out.println("Current category  : " + oldCname);
+                    System.out.print("Enter new category: ");
+    
+                    newCname = scanner.nextLine(); 
+                    isDuplicate = isDuplicate(newCname, arrCName, size);
+
+                    feedback = isDuplicate ? newCname + " already exist please enter other name instead." : "";
+
+                    System.out.println(feedback);
+                    isValid  = isValidString(newCname);
+
+                    feedback = isValid ? "" : "Input must be word!";
+                    System.out.println(feedback);
+
+                  } while (isDuplicate || !isValid);
+
+                do {
+
+                  System.out.print("Are you confirm to change to this  " + newCname + "(y/n): ");
+                  confirm = Character.toLowerCase(scanner.nextLine().charAt(0));
+                  
+                  isValid  = confirm == 'y' || confirm =='n';
+                  feedback = isValid ? "" :  "choose beetween y or n";
+                  System.out.println(feedback);
+                  
+                } while (!isValid);
+                
+                  if(confirm == 'y'){
+                    category.setName(newCname);
+                    System.out.println("You Changed " + oldCname + " to " + newCname + " succesfully!");
+                    inventory.displayCategories();
+                  }else{
+                    System.out.println("Category name change cancelled!");
+                  }
+        
+               }
+                  
+     case 5 -> {
+                System.out.println("Back to menu");
+                return ;
+               }
+                  
+     
+  }
+}
+
+public void deleteCategory(){
+
+}
 
 }

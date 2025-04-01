@@ -171,6 +171,7 @@ public void displayCategories() {
  
 //#region displayScategories param: Category[] subcat
 public void displaySCategories(Category[] subCat){
+    if(subCat.length != 0){
         System.out.println("\n===================================");
         System.out.println("  SUB CATEGORY DETAILS");
         System.out.println("===================================");
@@ -184,6 +185,11 @@ public void displaySCategories(Category[] subCat){
               
         }
         System.out.println("===================================");
+    }else{
+        System.out.println("SubCategory not available!");
+       
+    }
+       
     }
 //#endregion
 
@@ -383,38 +389,47 @@ public void addCategory(Category newCategory){
         return subcats;
     }
 //#endregion
+
+public Category[]getSubCatList( Category category){
+    Category[] subcatsArr = category.getSCategories();
+    return  subcatsArr;
+}
   
 //#region getSubCatProduct return Product[] subCatProduct
     //get Product from subCategory
     public Product[]getSubCatProduct(int choice, Scanner scanner) {
         // Retrieve subcategories
-        Category[] subcats = getSubCatList(choice); // Returns array
+        Category[] subcats = getSubCatList(choice); // Returns subcat objext
     
-        // Check if subcategories exist
-        if (subcats == null || subcats.length == 0) {
-            System.out.println("No subcategories available.");
-            
-        }
 
-        Category subCat = chooseSubCat(choice, scanner, subcats); 
+        Category subCat = chooseSubCat(choice, scanner, subcats); //choosing the subcat 
+       
+
+       
+
         int count = 0;
-        for(Product product : products)
-        
-        if(product.getCategory().equals(subCat)){ 
-          count++;
+        // expand array size
+        for(Product product : products){
+
+            if(product.getCategory().equals(subCat)){
+                 // Create a new array, one size bigger
+                count++;  //expanding array
+               
+              }          
         }
 
- 
         Product []subCatProduct = new Product[count]; 
-        int i = 0; 
-        for(Product product : products)
-        
-        if(product.getCategory().equals(subCat)){
-          subCatProduct[i] = product;
-          i++;
-        }
-        
 
+        // insert value to array
+        int i = 0;
+        for(Product product : products){
+
+            if(product.getCategory().equals(subCat)){
+                subCatProduct[i]  = product;
+                i++;
+              }          
+        }
+       
       
         return subCatProduct;
 
@@ -429,6 +444,7 @@ public void addCategory(Category newCategory){
         try {
             // Display subcategories
             displaySCategories(subcats);
+            if(subcats.length == 0){ return null;}// exit this method if kitty not found;
     
             // Get user input
             System.out.printf("Choice (1-%d): ", subcats.length);

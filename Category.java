@@ -6,16 +6,21 @@ public class Category {
   private Category pCategory;// refrence to main_cat
   private Category[] sCategories; // array store subcat
   private int sCatProdCount = 0;
+  private static int cCount = 0;
  
   public Category(){
 
   }
 
   public Category(String cName, Category pCategory){
+    cCount ++;
+  
       id = IdGenerator.generateCategoryId(cName);
       this.cName  = cName;
       this.pCategory = pCategory;
       sCategories = new Category[0];
+
+
 
    
   }
@@ -24,7 +29,7 @@ public class Category {
   public String getName(){return cName;}
   public Category getPCategory(){return pCategory;}
   public Category[] getSCategories(){return sCategories;}
-  
+  public void setName(String newName){this.cName = newName;}
   public int getSCatProdCount(){
     sCatProdCount = 0; 
     for(Category sCategory : sCategories){
