@@ -90,7 +90,7 @@ public class Crud{
           } 
       }while(true);
     
-    }catch(Exception e){ 
+    }catch(InputMismatchException e){ 
       System.out.println(" Invalid input! Please enter a number.");
       scanner.nextLine();
       displayMenu();
@@ -326,6 +326,7 @@ public class Crud{
              //#endregion
 
              //#region change size
+             //Tod0: validate duplicate size 
              case 8
              ->{
               String[] productColor =  selectedProduct.getColor();
@@ -434,21 +435,41 @@ public void deleteProduct(){
 //#region addProduct()
 
 public void addProduct(){
-  boolean isValid = true;
- 
+  boolean isValid;
+  boolean isDuplicate;
+  String feedback;
   String name;
   String brand;
   String material = "";
   double price = 0;
   Category[] subcats = null;
   Category subcat = null;
+
+  // get array of product name for duplicate validation
+  Product []arrProduct = inventory.getProducts();
+  String []arrProductName =  new String [arrProduct.length];
+
+  for(int i = 0; i < arrProduct.length; i++){
+    arrProductName[i] = arrProduct[i].getName();
+    System.out.println(arrProductName[i]);
+  }
+  
+
+
 //#region name brand material price
+do {  
+
   System.out.println("\n=========Adding product =========");
   System.out.print("  Enter product name :  " );
   name = scanner.nextLine();
-
-  System.out.print("  Enter the brand    :  ");
+  isDuplicate  = isDuplicate(name, arrProductName, arrProduct.length);
+  feedback = isDuplicate ? name + " already exist please change to other name instead" : "";
+  System.out.println(feedback);
+  
+} while (isDuplicate);
+ System.out.print("  Enter product brand : ");
   brand = scanner.nextLine();
+  System.out.println(" ");
 
 do { 
   
@@ -458,7 +479,7 @@ do {
     int choice = scanner.nextInt()-1;
     isValid = (choice >= 0 && choice < Shoes.AVAILABLE_MATERIALS.length);
     material = isValid ?  Shoes.AVAILABLE_MATERIALS[choice] : null;
-    String feedback = isValid ? "  Material:  " + Shoes.AVAILABLE_MATERIALS[choice] : "Choose between 1-" + Shoes.AVAILABLE_MATERIALS.length;
+     feedback = isValid ? "  Material:  " + Shoes.AVAILABLE_MATERIALS[choice] : "Choose between 1-" + Shoes.AVAILABLE_MATERIALS.length;
     System.out.println(feedback);
 
    } catch (Exception e) {
@@ -472,14 +493,14 @@ do {
  
   
   do{
-    isValid = true;
+  
     try { 
       System.out.print("  Enter product price: RM");
        double p = scanner.nextDouble();
       scanner.nextLine();  
-      isValid = (p>0 && p<1000)? true:false;
+      isValid = (p>0 && p<1000);
       price = isValid ? p : 0; 
-      String feedback = isValid ? "":"price must be more than 0 and less than 1000\n";
+      feedback = isValid ? "":"price must be more than 0 and less than 1000\n";
       System.out.println(feedback);
 
     } catch (InputMismatchException e) {
@@ -545,9 +566,9 @@ int numOfColor = 0;
  System.out.println("        Choosing color");
  System.out.println("---------------------------------");
  
-  //Todo: validate number of color  less than 5
+  // validate number of color  less than 5
   do { 
-      //Todo: validate input must be number
+      // validate input must be number
     try {
     
       System.out.print("Enter number of color: ");
@@ -556,7 +577,7 @@ int numOfColor = 0;
       isValid = (numOfColor >= 1 && numOfColor <= 5);
   
       //giving feedback
-      String feedback = isValid ? "Product have " + numOfColor +" color..": "Product must have atleast one color and contain  atless  less than 6 colors";
+       feedback = isValid ? "Product have " + numOfColor +" color..": "Product must have atleast one color and contain  atless  less than 6 colors";
       System.out.println(feedback);
         
     } catch (InputMismatchException e) {
@@ -574,11 +595,11 @@ int numOfColor = 0;
   String[]colors = new String[numOfColor];
   int count = numOfColor;
 
-  boolean isDuplicate = false;
+
 
     for(int i =0; i < colors.length; i++){
-      //Todo: validate color input must be character only
-      //Todo : validate it is repeat color?
+      // validate color input must be character only
+      // validate it is repeat color?
       do { 
         try {
           Shoes.displayColor();
@@ -621,8 +642,8 @@ int numOfColor = 0;
  
  //#region add number of size avalale for each color
 
- //todo: check shoes size;
-//todo: check each shoes size must be mumber
+ //: check shoes size;
+// check each shoes size must be mumber
 
   double[][] eachSize = new double[numOfColor][];
   int[] numOfSizes = new int[numOfColor];
@@ -630,14 +651,15 @@ int numOfColor = 0;
 
   for(int i = 0; i < numOfColor ; i++){
     do { 
-       //todo: validate it is number ;
+       //: validate it is number ;
       try {
-         //todo: validate it the number > 0 ;
+         //: validate it the number > 0 ;
         
         System.out.printf("Enter number of sizes available for  %s color_>",colors[i]);
         numOfSizes[i] = scanner.nextInt();
+
         numOfSizes[i] = (numOfSizes[i] > 0 && numOfSizes[i] <6) ?  numOfSizes[i] : 0;
-        isValid =  (numOfSizes[i] <= 0 && numOfSizes[i] <6) ? false : true;
+        isValid =  (numOfSizes[i] > 0 && numOfSizes[i] <6);
         String err = isValid ? "":"Number must be more than 0 and less than 6";
         System.out.println(err);
 
@@ -669,7 +691,7 @@ int numOfColor = 0;
       
           do {
              try {
-             //todo : validate size x duplicate
+             // : validate size x duplicate
               System.out.printf("%d.) size  for color %s: ", (j + 1), colors[i]);
 
               int choice = scanner.nextInt()-1;
@@ -719,11 +741,11 @@ int numOfColor = 0;
       do {
         try {
           System.out.printf("Enter stock for (Size %s): ",eachSize[i][j]);
-          stock[i][j] = scanner.nextInt();
-          isValid = (stock[i][j] >= 0  && stock[i][j] < 9999);
+          int quantity = scanner.nextInt();
+          isValid = ( quantity >= 0  &&  quantity < 9999);
 
           if(isValid){
-            stock[i][j] = stock[i][j];
+            stock[i][j] = quantity;
           }else{
             System.out.println("Stock must be positive and less than 9999");
           }
@@ -942,14 +964,21 @@ public static boolean isValidString(String input) {
 public static boolean isDuplicate(String input, String[] arr, int size) {
       // Normalize input: Convert to lowercase and remove all spaces
       String normalizedInput = input.toLowerCase().replaceAll("\\s+", "");
+      String normalizedArrayElement ;
 
       for (int i = 0; i < size; i++) {
           // Normalize array elements: Convert to lowercase and remove all spaces
-          String normalizedArrayElement = arr[i].toLowerCase().replaceAll("\\s+", "");
-          
-          if (normalizedArrayElement.equals(normalizedInput)) {
-              return true; // Duplicate found
+          if(arr[i]!= null){
+
+            normalizedArrayElement = arr[i].toLowerCase().replaceAll("\\s+", "");
+
+              if (normalizedArrayElement.equals(normalizedInput)) {
+                return true; // Duplicate found
+            }
+
           }
+        
+          
       }
       return false; // No duplicate found
   
@@ -997,9 +1026,10 @@ public void editCategory(Category category, Category[] arr){
     case 1 -> {
             int numOfSCat = 0;
             Category[] arrSCat = inventory.getSubCatList(category);
-            String[]  arrSCatName = new String [arrSCat.length];
+            String[]  arrSCatName = new String [arrSCat.length + 1];
 
-            for(int i = 0; i < arrSCat.length ; i++){
+            arrSCatName[0] = category.getName(); // initialize main sub name prevet subcatname same with main
+            for(int i = 1; i < arrSCat.length ; i++){
               arrSCatName[i] = arrSCat[i].getName();
               System.out.println(arrSCatName[i]);
             }
@@ -1029,43 +1059,47 @@ public void editCategory(Category category, Category[] arr){
 
              
                 scanner.nextLine();
-                /* 
-                 // Create a new array with enough space for existing + new subcategories
-                 String[] updatedArrSCatName = new String[arrSCat.length + numOfSCat];
+                
+                // create a copy of array subcat for updated category
+                String []newArrSCatName = new String[arrSCat.length + numOfSCat]; 
 
-                 // Copy existing subcategory names into the new array
-                 for (int i = 0; i < arrSCat.length; i++) {
-                     updatedArrSCatName[i] = arrSCat[i].getName();
-                 }*/
+                for(int i = 0 ; i < newArrSCatName.length; i++){
+                  if(i < arrSCat.length){
+                    newArrSCatName[i] = arrSCatName[i]; //initialize existed subcatname 
+                  }
+             
+                }
+
+                //New Arr for new subcat object
+                //Category []newSCatArr = new  Category[numOfSCat]; 
 
                String sName;
                Category newSCat = new Category();
 
                for(int i = 0; i < numOfSCat ; i++){
                 do { 
-                  System.out.printf("%d.) Enter subcategory name: " , i);
+                  System.out.printf("%d.) Enter subcategory name: " , i+1);
                   sName = scanner.nextLine();
 
                   
                   newSCat = new Category(sName,category);  
-                  isDuplicate =  isDuplicate(sName, arrSCatName, arrSCat.length);
+                  isDuplicate =  isDuplicate(sName, newArrSCatName, newArrSCatName.length);
+
+                  
 
 
                   feedback = isDuplicate? sName + " already exist choose other name instead!" : " ";
                   System.out.println(feedback);
 
-                } while (isDuplicate);     
-          
+                } while (isDuplicate);    
+
+                newArrSCatName[arrSCat.length + i] = sName; // intialize new subcategory into the array
+                category.addSubcategory(newSCat);  
                }
               
                                 
 
-               for(int i = 0; i < numOfSCat ; i++){
-                 category.addSubcategory(newSCat);  
-               }
-
-
-             
+              
 
               
 

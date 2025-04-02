@@ -643,7 +643,7 @@ public Category selectCategory(Scanner scanner){
         try {
               
             displayCategories();
-            System.out.printf("Choose main category (1-%d)" , categories.length);
+            System.out.printf("Choose main category (1-%d): " , categories.length);
             int choice = scanner.nextInt();
             
             if(choice >= 0 && choice <= categories.length){

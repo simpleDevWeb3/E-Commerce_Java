@@ -85,7 +85,7 @@ public void setBrand(String brand) {
     System.out.println("Brand        : " + brand);
     System.out.println("Category     : " + getCategory().getName());
     System.out.println("Material     : " + material);
-    System.out.println("Price        : RM" + getPrice());
+    System.out.printf("Price        : RM%.2f" ,getPrice()*100/100);
     System.out.println("\nAvailable Colors & Sizes:");
 
     for (int i = 0; i < color.length; i++) {
