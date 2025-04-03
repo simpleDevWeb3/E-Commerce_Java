@@ -326,7 +326,9 @@ public class Crud{
              //#endregion
 
              //#region change size
-             //Tod0: validate duplicate size 
+             //validate duplicate size 
+             //validate duplicate color
+             
              case 8
              ->{
               String[] productColor =  selectedProduct.getColor();
@@ -1031,8 +1033,10 @@ public void editCategory(Category category, Category[] arr){
             arrSCatName[0] = category.getName(); // initialize main sub name prevet subcatname same with main
             for(int i = 1; i < arrSCat.length ; i++){
               arrSCatName[i] = arrSCat[i].getName();
-              System.out.println(arrSCatName[i]);
+              
             }
+
+            inventory.displaySCategories(subCat);
         
 
              do {
@@ -1095,30 +1099,38 @@ public void editCategory(Category category, Category[] arr){
 
                 newArrSCatName[arrSCat.length + i] = sName; // intialize new subcategory into the array
                 category.addSubcategory(newSCat);  
+                
+               }
+          
+                                
+               System.out.println("Updated list of subcategories:");
+               System.out.println("================================");
+               int i = 0;
+               for (String name : newArrSCatName) {
+                   System.out.println(i+1 + ".) "+ name);
+                   i++;
                }
               
-                                
-
-              
-
+               editCategory(category, arr);
               
 
               }
 
     case 2 -> {
                 System.out.println("Delete subcategory");
+                editCategory(category, arr);
               }
     
      case 3 -> {
-               
+              
                 System.out.println("Change subcategory to edit: ");
                 Category selectedSCat =inventory.chooseSubCat(choice, scanner, subCat);
                     
                 Category[] sCatArr = inventory.getSubCatList(category);
 
                 String [] sCatNameArr = new String[sCatArr.length];
-
-                for (int i = 0; i < sCatArr.length ; i++) {
+                sCatNameArr[0] = category.getName();
+                for (int i = 1; i < sCatArr.length ; i++) {
                   sCatNameArr[i] =  sCatArr[i].getName();
                 }
 
@@ -1160,6 +1172,7 @@ public void editCategory(Category category, Category[] arr){
                   System.out.println("You Changed " + sName + " to " + newSName + " succesfully!");
                   selectedSCat.setName(newSName);
                   inventory.displaySCategories(subCat);
+                  editCategory(category, arr);
                 }else{
                   System.out.println("subcategory name change cancelled!");
                 }
@@ -1168,15 +1181,25 @@ public void editCategory(Category category, Category[] arr){
                }
        
      case 4 -> {
-                  String newCname;
-                  String oldCname = category.getName();
-                  
-                  String []arrCName = new String[size];
-                //get the arr of the name category
-                  for (int i = 0; i < size ; i++) {
-                    arrCName[i] = catArr[i].getName();
-                  }
+                 String newCname;
+                
+                String oldCname = category.getName();
+                Category[] arrSCat = inventory.getSubCatList(category);
 
+                int totalSize = arrSCat.length + catArr.length;  // Combined size of both arrays
+                String[] arrCName = new String[totalSize];
+
+                //  Copy subcategory names
+                for (int i = 0; i < arrSCat.length; i++) {
+                    arrCName[i] = arrSCat[i].getName();
+                }
+
+                // Copy main category names after subcategories
+                for (int i = 0; i < catArr.length; i++) {
+                    arrCName[arrSCat.length + i] = catArr[i].getName();
+                }
+
+              
 
                   do { 
                     System.out.println("=============================");
@@ -1213,6 +1236,7 @@ public void editCategory(Category category, Category[] arr){
                     category.setName(newCname);
                     System.out.println("You Changed " + oldCname + " to " + newCname + " succesfully!");
                     inventory.displayCategories();
+                    editCategory(category, arr);
                   }else{
                     System.out.println("Category name change cancelled!");
                   }

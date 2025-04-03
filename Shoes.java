@@ -36,9 +36,17 @@ public class Shoes extends Product {
     return totalStock;
 }
 
-  public int[][]getStock(){
+
+//return specific stock
+  public int getStock(int row , int column){
+    return stock[row][column];
+  }
+
+  //return array of stock
+  public int[][]getStock( ){
     return stock;
   }
+  
   
   public double[][] getSize(){
     return size;
@@ -141,6 +149,11 @@ public static void displayMaterials(){
   }
 
   System.out.println("___________________");
+}
+
+
+public double selectedStock(int row , int column){
+    return  stock[row][column];
 }
 
   
