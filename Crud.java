@@ -291,30 +291,39 @@ public class Crud{
              case 7
              ->{
               String[] productColor =  selectedProduct.getColor();
-  
+               
+                for(String color : productColor){
+                  System.out.println(color);
+                }
+
                int row = 0;
                int column = 0;
+               boolean isDuplicate;
 
               do{
                 
                 inventory.chooseSize_colorInterface(scanner , selectedProduct);
                  row = inventory.chooseColor(scanner, selectedProduct);
-               
-
+    
+        
               }while(!isValid);
 
               inventory.disSelectedColor( row,selectedProduct);
               String oldColor = productColor[row];
               String newColor ;
+              String feedback;
               do { 
-                  scanner.nextLine();
+                
                   System.out.print("\nEnter new color: ");
                   newColor = scanner.nextLine();
                   isValid =  isValidString(newColor);
-
-             
-              } while (!isValid);
-          
+                  feedback = isValid ? " " : "Input must be word only!";
+                  System.out.println(feedback);
+                  isDuplicate =isDuplicate(newColor, productColor,productColor.length);
+                  feedback = isDuplicate ? "Color already exist please change to other color instead!" : "";
+                  System.out.println(feedback);
+              } while (!isValid || isDuplicate);
+            
               selectedProduct.setColor(row,newColor);
               System.out.println(oldColor + " changed to " + productColor[row]);
               
@@ -1175,6 +1184,7 @@ public void editCategory(Category category, Category[] arr){
                   editCategory(category, arr);
                 }else{
                   System.out.println("subcategory name change cancelled!");
+                  editCategory(category, arr);
                 }
                
                 
@@ -1239,6 +1249,7 @@ public void editCategory(Category category, Category[] arr){
                     editCategory(category, arr);
                   }else{
                     System.out.println("Category name change cancelled!");
+                    editCategory(category, arr);
                   }
         
                }
