@@ -44,6 +44,9 @@ public class Category {
     return sCatProdCount;
   }
 
+
+  public void setSCategories(Category []sCategories){this.sCategories = sCategories;}
+
   public void addSubcategory(Category subcategory){
     //expand array
      sCategories = Arrays.copyOf(sCategories,sCategories.length + 1 );

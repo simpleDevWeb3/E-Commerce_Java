@@ -575,6 +575,31 @@ public Product chooseProduct(Product[] products, Scanner scanner) {
         return products;
  }
 
+ public void  deleteSubCat(String categoryId, Scanner scanner ,Category selectedCat){
+     int size = selectedCat.getSCategories().length;
+     int newIndex = 0;
+     Category []oldSubCat = selectedCat.getSCategories();
+     Category []newSubCat =new Category[size - 1];
+
+     
+    for (int i = 0; i < size; i++) {
+        if (oldSubCat[i].getId().equals(categoryId)) {
+            //Skip the Category
+            continue;
+        }
+        // Ensure we don't go out of bounds
+        if (newIndex < newSubCat.length) {
+            newSubCat[newIndex++] = oldSubCat[i];
+        }
+        
+        selectedCat.setSCategories(newSubCat);
+
+        
+    }
+
+    displaySCategories(selectedCat.getSCategories());
+ }
+
  public void deleteProduct(String productId,Scanner scanner,Product s) {
     int productCount = Product.getProductCount();
     int newIndex = 0;

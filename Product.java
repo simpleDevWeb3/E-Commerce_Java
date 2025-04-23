@@ -37,6 +37,7 @@ public static int getProductCount(){
 
  public String getName(){return pName;}
 
+
  public void setName(String name){this.pName = name;}
 
  public double getPrice(){return price;}

@@ -463,6 +463,7 @@ public void addProduct(){
   for(int i = 0; i < arrProduct.length; i++){
     arrProductName[i] = arrProduct[i].getName();
     System.out.println(arrProductName[i]);
+  
   }
   
 
@@ -1039,11 +1040,19 @@ public void editCategory(Category category, Category[] arr){
             Category[] arrSCat = inventory.getSubCatList(category);
             String[]  arrSCatName = new String [arrSCat.length + 1];
 
-            arrSCatName[0] = category.getName(); // initialize main sub name prevet subcatname same with main
-            for(int i = 1; i < arrSCat.length ; i++){
-              arrSCatName[i] = arrSCat[i].getName();
-              
+            int totalSize = arrSCat.length + catArr.length;  // Combined size of both arrays
+            String[] arrName = new String[totalSize];
+
+            //  Copy subcategory names
+            for (int i = 0; i < arrSCat.length; i++) {
+                arrName[i] = arrSCat[i].getName();
             }
+
+            // Copy main category names after subcategories
+            for (int i = 0; i < catArr.length; i++) {
+                arrName[arrSCat.length + i] = catArr[i].getName();
+            }
+
 
             inventory.displaySCategories(subCat);
         
@@ -1096,7 +1105,7 @@ public void editCategory(Category category, Category[] arr){
 
                   
                   newSCat = new Category(sName,category);  
-                  isDuplicate =  isDuplicate(sName, newArrSCatName, newArrSCatName.length);
+                  isDuplicate =  isDuplicate(sName,  arrName,  arrName.length);
 
                   
 
@@ -1124,10 +1133,30 @@ public void editCategory(Category category, Category[] arr){
               
 
               }
+              
+         
 
-    case 2 -> {
-                System.out.println("Delete subcategory");
-                editCategory(category, arr);
+      case 2 -> {
+                  Category[] sCat = category.getSCategories();
+
+                  // Let the user choose a subcategory (prompt is inside this method)
+                  Category selectedSCat = inventory.chooseSubCat(choice, scanner, sCat);
+                  
+                  // Find the index of the selected category in the array
+                  choice = -1;
+                  for (int i = 0; i < sCat.length; i++) {
+                      if (sCat[i].getId().equals(selectedSCat.getId())) {
+                          choice = i;
+                          break;
+                      }
+                  }
+                  
+                  // Only delete if a valid choice was made
+                  if (choice >= 0 && choice < sCat.length) {
+                      inventory.deleteSubCat(selectedSCat.getId(), scanner, category);
+                  }
+
+                  editCategory(category, arr);
               }
     
      case 3 -> {
